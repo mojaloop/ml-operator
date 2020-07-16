@@ -146,7 +146,7 @@ spec:
       containers:
         - name: mojaloop-operator
           # Replace this with the built image name
-          image: docker.io/matdabomb/ml-operator:latest
+          image: docker.io/matdabomb/ml-operator:1.0.0
           imagePullPolicy: IfNotPresent
           env:
             - name: WATCH_NAMESPACE

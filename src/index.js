@@ -1,5 +1,9 @@
 const k8s = require('@kubernetes/client-node');
 const CronJob = require('cron').CronJob;
+const got = require('got');
+
+const SERVICE_TO_WATCH = "mojaloop-operator"
+const VERSION_CHECKER = "http://localhost:3000/version"
 
 // Loads the config from the bound service account
 const kc = new k8s.KubeConfig();
@@ -7,28 +11,55 @@ kc.loadFromDefault();
 
 const k8sApi = kc.makeApiClient(k8s.AppsV1Api);
 
-
-const getPods = function () {
-  k8sApi.listDeploymentForAllNamespaces()
+const getFilteredDeployments = function () {
+  k8sApi.listDeploymentForAllNamespaces(null, null, null, `app.kubernetes.io/name == ${SERVICE_TO_WATCH}`)
     .then((res) => {
       const deploymentList = res.body;
       deploymentList.items.map(item => {
+
+        // Get deployment current image
         const deploymentContainers = item.spec.template.spec.containers;
         const image = deploymentContainers[0].image
-        console.log(image)
+
+        const imageDetails = getImageAndTag(image)
+
+        got.get(VERSION_CHECKER, {
+          searchParams: imageDetails,
+          responseType: 'json'
+        }).then(response => {
+          const body = response.body
+
+          // Not the latest version. Notify operator
+          if(body.is_latest === false) {
+            console.log(`${imageDetails.image} is not up to date! Notifying Operator`)
+            notifyOperator(imageDetails.image, body.latest_tag)
+          } else {
+            console.log(`${imageDetails.image} is up to date!`)
+          }
+        }).catch(error => {
+          console.error(error)
+        })
       })
-      // console.log(res.body);
     })
     .catch((err) => {
       console.log(err);
     });
 }
 
-getPods();
+function getImageAndTag(imageUrl) {
+  const index = imageUrl.indexOf(":")
+  return {
+    image: SERVICE_TO_WATCH,
+    tag: imageUrl.substr(index + 1)
+  }
+}
 
-// const job = new CronJob('0 * * * * *', function() {
-//   getPods();
-//   console.log('You will see this message every second');
-// }, null, true);
-//
-// job.start();
+function notifyOperator(service, latest_tag) {
+  console.warn(`${service} is not on the latest secure version. Please update urgently!`)
+}
+
+const job = new CronJob('0 * * * * *', function() {
+  getFilteredDeployments();
+}, null, true);
+
+job.start();
