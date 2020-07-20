@@ -15,5 +15,6 @@ To make it easier for Hub Operators to (upgrade and) use these patched images fo
 
 ### Two primary functions
 
-Notification about an patched image version available - can be slack notification
+Notification about an patched image version available - can be slack notification.
+
 Automated patching (pull the new image and upgrade) - if approved by a Hub Operator / Tech Ops
