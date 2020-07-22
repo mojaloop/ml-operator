@@ -8,6 +8,9 @@ const router = new Router();
 const services = {
   "mojaloop-operator": [
     "1.0.1",
+  ],
+  "central-ledger": [
+    "10.5.2"
   ]
 }
 
@@ -26,6 +29,23 @@ router.get('/version', (ctx, next) => {
     console.log(response)
 
     ctx.body = response
+    ctx.status = 200
+  }
+});
+
+router.get('/updateversion', (ctx, next) => {
+  const query = ctx.query
+
+  const image = query.image
+  const tag = query.tag
+
+  if(tag && image) {
+    services[image] = [
+      tag
+    ]
+
+    console.log(services)
+
     ctx.status = 200
   }
 });

@@ -2,12 +2,12 @@ const k8s = require('@kubernetes/client-node');
 const CronJob = require('cron').CronJob;
 const got = require('got');
 
-const SERVICE_TO_WATCH = "mojaloop-operator"
-const VERSION_CHECKER = "http://localhost:3000/version"
+const SERVICE_TO_WATCH = "centralledger-service"
+const VERSION_CHECKER = "https://version-checker-l36os5e3rq-ew.a.run.app"
 
 // Loads the config from the bound service account
 const kc = new k8s.KubeConfig();
-kc.loadFromDefault();
+kc.loadFromCluster();
 
 const k8sApi = kc.makeApiClient(k8s.AppsV1Api);
 
@@ -56,11 +56,11 @@ function getImageAndTag(imageUrl) {
 
 function notifyOperator(service, latest_tag) {
   console.warn(`${service} is not on the latest secure version. Please update urgently!`)
-  got.post('https://hooks.slack.com/services/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', {
-    json: {
-      text: `\`${service}\` is not on the latest secure version. Please update urgently to \`${latest_tag}\`!`
-    }
-  })
+  // got.post('https://hooks.slack.com/services/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', {
+  //   json: {
+  //     text: `\`${service}\` is not on the latest secure version. Please update urgently to \`${latest_tag}\`!`
+  //   }
+  // })
 }
 
 const job = new CronJob('0 * * * * *', function() {
