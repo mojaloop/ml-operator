@@ -9,7 +9,7 @@ const services = {
   "mojaloop-operator": [
     "1.0.1",
   ],
-  "central-ledger": [
+  "centralledger-service": [
     "10.5.2"
   ]
 }

@@ -3,7 +3,7 @@ const CronJob = require('cron').CronJob;
 const got = require('got');
 
 const SERVICE_TO_WATCH = "centralledger-service"
-const VERSION_CHECKER = "https://version-checker-l36os5e3rq-ew.a.run.app"
+const VERSION_CHECKER = "https://version-checker-l36os5e3rq-ew.a.run.app/version"
 
 // Loads the config from the bound service account
 const kc = new k8s.KubeConfig();
@@ -56,11 +56,11 @@ function getImageAndTag(imageUrl) {
 
 function notifyOperator(service, latest_tag) {
   console.warn(`${service} is not on the latest secure version. Please update urgently!`)
-  // got.post('https://hooks.slack.com/services/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', {
-  //   json: {
-  //     text: `\`${service}\` is not on the latest secure version. Please update urgently to \`${latest_tag}\`!`
-  //   }
-  // })
+  got.post('https://hooks.slack.com/services/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', {
+    json: {
+      text: `\`${service}\` is not on the latest secure version. Please update urgently to \`${latest_tag}\`!`
+    }
+  })
 }
 
 const job = new CronJob('0 * * * * *', function() {
