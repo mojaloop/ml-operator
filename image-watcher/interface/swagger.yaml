@@ -1,0 +1,77 @@
+openapi: 3.0.0
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/lewisdaly/test/1.0.0
+info:
+  description: Image-Watcher (name TBD) is a standalone service which watches docker hub for image updates and caches them periodically. Other services can query image watcher to ask of there is a newer version for a given image, based on a provided upgrade strategy
+  version: "0.1.0"
+  title: ml-image-watcher api
+  contact:
+    email: lewisd@crosslaketech.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
+paths:
+  /images/{org}/{image}/{tag}:
+    get:
+      tags:
+        - images
+      operationId: getImage
+      summary: getImage
+      description: Get a new version of the image based on the current and an upgrade strategy
+      parameters:
+        - name: org
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The organization of the image - e.g. `mojaloop`
+          example: mojaloop
+        - name: image
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The image name - e.g. `central-ledger`
+          example: central-ledger
+        - name: tag
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The current tag of the image
+          example: "v11.0.0"
+        - name: strategy
+          in: query
+          schema:
+            type: string
+            enum: [patch, bugfix, minor, major]
+          description: The upgrade strategy to apply. If not set, will use the `patch` strategy
+        
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResult'
+  
+components:
+  schemas:
+    ImageResult:
+      type: object
+      required:
+        - tag
+        - fullImage
+      properties:
+        tag:
+          type: string
+          example: "v11.0.0-patch.1"
+        fullImage:
+          type: string
+          example: "mojaloop/central-ledger/v11.0.0-patch.1"
+      example:
+        tag: "v11.0.0-patch.1"
+        fullImage: "mojaloop/central-ledger/v11.0.0-patch.1"
+  
