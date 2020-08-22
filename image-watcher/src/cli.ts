@@ -26,7 +26,7 @@
  --------------
  ******/
 import { ConvictConfig, PACKAGE } from '~/shared/config'
-import { ServerAPI, ServerConfig } from '~/server'
+import { ServerConfig } from '~/server'
 import { Command } from 'commander'
 import { Handler } from 'openapi-backend'
 import Handlers from '~/handlers'
@@ -41,33 +41,24 @@ const program = new Command(PACKAGE.name)
  * @param handlers { { [handler: string]: Handler } } dictionary with api handlers, will be joined with Handlers.Shared
  * @returns () => Promise<void> asynchronous commander action to start api
  */
-function mkStartAPI (api: ServerAPI, handlers: { [handler: string]: Handler }): () => Promise<void> {
+function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<void> {
   return async (): Promise<void> => {
     // update config from program parameters,
-    // so setupAndStart will know on which PORT/HOST bind the server
-    const apiConfig = ConvictConfig.get(api.toUpperCase())
+    const port = ConvictConfig.get('PORT')
+    const host = ConvictConfig.get('HOST')
 
     // resolve the path to openapi v3 definition file
-    const apiPath = path.resolve(__dirname, `../src/interface/api-${api}.yaml`)
-
-    // prepare API handlers
-    const joinedHandlers = {
-      ...Handlers.Shared,
-      ...handlers
-    }
-
+    const apiPath = path.resolve(__dirname, `../src/interface/.yaml`)
     const serverConfig: ServerConfig = {
-      port: apiConfig.PORT,
-      host: apiConfig.HOST,
-      api
+      port,
+      host
     }
     // setup & start @hapi server
-    await index.server.setupAndStart(serverConfig, apiPath, joinedHandlers)
+    await index.server.setupAndStart(serverConfig, apiPath, handlers)
   }
 }
 
-const startInboundAPI = mkStartAPI(ServerAPI.inbound, Handlers.Inbound)
-const startOutboundAPI = mkStartAPI(ServerAPI.outbound, Handlers.Outbound)
+const startApi = mkStartAPI(Handlers)
 
 // setup cli program
 program
@@ -77,14 +68,9 @@ program
   .option('-H, --host <string>', 'listen on host')
 
 // setup standalone command to start Inbound service
-program.command('inbound')
-  .description('start Inbound API service')
-  .action(startInboundAPI)
-
-// setup standalone command to start Outbound service
-program.command('outbound')
-  .description('start Outbound API service')
-  .action(startOutboundAPI)
+program.command('start')
+  .description('start  API service')
+  .action(startApi)
 
 // fetch parameters from command line and execute
 program.parseAsync(process.argv)

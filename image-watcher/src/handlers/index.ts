@@ -25,12 +25,8 @@
 
  --------------
  ******/
-import Inbound from './inbound'
-import Outbound from './outbound'
-import Shared from './shared'
+import Hello from './hello'
 
 export default {
-  Shared,
-  Inbound,
-  Outbound
+  HelloGet: Hello.get
 }

@@ -33,14 +33,8 @@ export { PACKAGE }
 // interface to represent service configuration
 export interface ServiceConfig {
   ENV: string;
-  INBOUND: {
-    HOST: string;
-    PORT: number;
-  };
-  OUTBOUND: {
-    HOST: string;
-    PORT: number;
-  };
+  HOST: string;
+  PORT: number;
   REDIS: {
     HOST: string;
     PORT: number;
@@ -61,33 +55,17 @@ export const ConvictConfig = Convict<ServiceConfig>({
     default: 'development',
     env: 'NODE_ENV'
   },
-  INBOUND: {
-    HOST: {
-      doc: 'The InboundAPI Hostname/IP address to bind.',
-      format: '*',
-      default: '0.0.0.0',
-      env: 'INBOUND_HOST'
-    },
-    PORT: {
-      doc: 'The InboundAPI port to bind.',
-      format: 'port',
-      default: 3001,
-      env: 'INBOUND_PORT'
-    }
+  HOST: {
+    doc: 'The InboundAPI Hostname/IP address to bind.',
+    format: '*',
+    default: '0.0.0.0',
+    env: 'INBOUND_HOST'
   },
-  OUTBOUND: {
-    HOST: {
-      doc: 'The OutboundAPI Hostname/IP address to bind.',
-      format: '*',
-      default: '0.0.0.0',
-      env: 'OUTBOUND_HOST'
-    },
-    PORT: {
-      doc: 'The OutboundAPI port to bind.',
-      format: 'port',
-      default: 3002,
-      env: 'OUTBOUND_PORT'
-    }
+  PORT: {
+    doc: 'The InboundAPI port to bind.',
+    format: 'port',
+    default: 3001,
+    env: 'INBOUND_PORT'
   },
   REDIS: {
     HOST: {
@@ -139,8 +117,8 @@ ConvictConfig.validate({ allowed: 'strict' })
 // extract simplified config from Convict object
 const config: ServiceConfig = {
   ENV: ConvictConfig.get('ENV'),
-  INBOUND: ConvictConfig.get('INBOUND'),
-  OUTBOUND: ConvictConfig.get('OUTBOUND'),
+  HOST: ConvictConfig.get('HOST'),
+  PORT: ConvictConfig.get('PORT'),
   REDIS: ConvictConfig.get('REDIS'),
   INSPECT: ConvictConfig.get('INSPECT')
 }

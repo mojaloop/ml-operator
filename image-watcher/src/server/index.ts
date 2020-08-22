@@ -29,5 +29,5 @@ import Handlers from '~/handlers'
 import setupAndStart from './setupAndStart'
 
 export { Server } from '@hapi/hapi'
-export { ServerAPI, ServerApp, ServerConfig } from './create'
+export { ServerConfig } from './create'
 export { Handlers, setupAndStart }
