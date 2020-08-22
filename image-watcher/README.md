@@ -38,8 +38,9 @@ Where strategy is one of:
 
 ## TODO
 
-- [ ] repo setup copy from other thing
-- [ ] simple http server setup
+- [x] repo setup copy from other thing
+- [x] simple http server setup
+- [ ] draft api
 - [ ] docker hub scraper
 - [ ] configure cron to scrape (in memory only)
 - [ ] update api

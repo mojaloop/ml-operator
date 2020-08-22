@@ -27,6 +27,7 @@
 import { Server } from '@hapi/hapi'
 import onValidateFail from '~/handlers/onValidateFail'
 import { validateRoutes } from '@mojaloop/central-services-error-handling'
+import ImageRepo from '~/domain/image'
 
 // minimal server configuration
 export interface ServerConfig {
@@ -34,8 +35,12 @@ export interface ServerConfig {
   port: number;
 }
 
-export default async function create (config: ServerConfig): Promise<Server> {
-  const server: Server = await new Server({
+export interface AppContext {
+  imageRepo: ImageRepo
+}
+
+export default function create (config: ServerConfig, appContext: AppContext): Server {
+  const server: Server = new Server({
     host: config.host,
     port: config.port,
     routes: {
@@ -43,7 +48,14 @@ export default async function create (config: ServerConfig): Promise<Server> {
         options: validateRoutes(),
         failAction: onValidateFail
       }
+    },
+    app: {
+      imageRepo: appContext.imageRepo,
+      hello: 'HELLO WORLD'
     }
   })
+
+  // Add app context
+  server.app = appContext
   return server
 }

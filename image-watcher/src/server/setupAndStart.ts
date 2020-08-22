@@ -32,13 +32,25 @@ import { Server } from '@hapi/hapi'
 import extensions from './extensions'
 import plugins from './plugins'
 import start from './start'
+import ImageRepo, { ImageRepoConfig } from '~/domain/image'
 
 export default async function setupAndStart (
   config: ServerConfig,
   apiPath: string,
   handlers: { [handler: string]: Handler }
 ): Promise<Server> {
-  const server = await create(config)
+  // TODO: init redis connection
+  const imageRepoConfig: ImageRepoConfig = {
+    // TODO: load from config!
+    imagesToWatch: [
+      {
+        orgId: 'mojaloop',
+        imageName: 'central-ledger',
+      }
+    ]
+  }
+  const imageRepo = new ImageRepo(imageRepoConfig)
+  const server = create(config, { imageRepo })
   await plugins.register(server, apiPath, handlers)
   await extensions.register(server)
   await start(server)

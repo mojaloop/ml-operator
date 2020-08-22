@@ -17,8 +17,8 @@ paths:
     get:
       tags:
         - images
-      operationId: getImage
-      summary: getImage
+      operationId: ImageGet
+      summary: ImageGet
       description: Get a new version of the image based on the current and an upgrade strategy
       parameters:
         - name: org

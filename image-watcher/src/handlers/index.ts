@@ -30,10 +30,12 @@ import { Util } from '@mojaloop/central-services-shared'
 import Health from './health'
 import Metrics from './metrics'
 import Hello from './hello'
+import Image from './images'
 
 const OpenapiBackend = Util.OpenapiBackend
 
 export default {
+  ImageGet: Image.get,
   HelloGet: Hello.get,
   HealthGet: Health.get,
   MetricsGet: Metrics.get,
