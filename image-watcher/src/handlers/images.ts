@@ -42,6 +42,7 @@ async function get(_context: any, request: Request, h: ResponseToolkit): Promise
   }
 
   const nextImage = await imageRepo.getImage(currentImage, strategy)
+  // TODO error handling - 404, 500 etc...
 
   // Map back to DTO
   const imageResponse = {

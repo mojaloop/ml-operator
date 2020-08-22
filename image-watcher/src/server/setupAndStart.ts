@@ -46,7 +46,15 @@ export default async function setupAndStart (
       {
         orgId: 'mojaloop',
         imageName: 'central-ledger',
-      }
+      },
+      {
+        orgId: 'ldaly',
+        imageName: 'central-ledger',
+      },
+      {
+        orgId: 'mojaloop',
+        imageName: 'ml-api-adapter',
+      },
     ]
   }
   const imageRepo = new ImageRepo(imageRepoConfig)

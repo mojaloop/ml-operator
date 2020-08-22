@@ -49,10 +49,7 @@ export default function create (config: ServerConfig, appContext: AppContext): S
         failAction: onValidateFail
       }
     },
-    app: {
-      imageRepo: appContext.imageRepo,
-      hello: 'HELLO WORLD'
-    }
+    app: appContext
   })
 
   // Add app context
