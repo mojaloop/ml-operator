@@ -5,9 +5,9 @@ Image-Watcher (name TBD) is a standalone service which watches docker hub for im
 
 ## API
 
+See [./src/interface/swagger.yaml](./src/interface/swagger.yaml) for the full spec.
 
-- `/image/{org}/{image}/{tag}`
-
+###  `GET /image/{org}/{image}/{tag}`
 
 e.g. 
 ```
@@ -34,3 +34,13 @@ Where strategy is one of:
 
 > TODO: Look into the semantic versioning spec to make this a little more kosher and follow some pre-defined protocols
 
+
+
+## TODO
+
+- [ ] repo setup copy from other thing
+- [ ] simple http server setup
+- [ ] docker hub scraper
+- [ ] configure cron to scrape (in memory only)
+- [ ] update api
+- [ ] business logic for `patch`

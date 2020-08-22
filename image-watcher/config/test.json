@@ -1,0 +1,20 @@
+{
+  "INBOUND": {
+    "PORT": 4005,
+    "HOST": "0.0.0.0"
+  },
+  "OUTBOUND": {
+    "PORT": 4006,
+    "HOST": "0.0.0.0"
+  },
+  "REDIS": {
+    "PORT": 6379,
+    "HOST": "localhost",
+    "TIMEOUT": 100
+  },
+  "INSPECT": {
+    "DEPTH": 4,
+    "SHOW_HIDDEN": false,
+    "COLOR": true
+  }
+}
