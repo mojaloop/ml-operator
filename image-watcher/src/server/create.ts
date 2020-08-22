@@ -25,7 +25,7 @@
  ******/
 
 import { Server } from '@hapi/hapi'
-import onValidateFail from '~/handlers/shared/onValidateFail'
+import onValidateFail from '~/handlers/onValidateFail'
 import { validateRoutes } from '@mojaloop/central-services-error-handling'
 
 // minimal server configuration
@@ -43,10 +43,7 @@ export default async function create (config: ServerConfig): Promise<Server> {
         options: validateRoutes(),
         failAction: onValidateFail
       }
-    },
-    // app: {
-    //   api: config.api
-    // }
+    }
   })
   return server
 }

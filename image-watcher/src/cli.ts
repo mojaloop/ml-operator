@@ -48,7 +48,7 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
     const host = ConvictConfig.get('HOST')
 
     // resolve the path to openapi v3 definition file
-    const apiPath = path.resolve(__dirname, `../src/interface/.yaml`)
+    const apiPath = path.resolve(__dirname, `../src/interface/swagger.yaml`)
     const serverConfig: ServerConfig = {
       port,
       host

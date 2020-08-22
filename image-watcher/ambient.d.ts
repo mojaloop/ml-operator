@@ -39,6 +39,7 @@ declare module '@mojaloop/central-services-error-handling'{
   }
   class FSPIOPError {
     public toString(): string;
+    // @ts-ignore
     public toApiErrorRecord<string, unknown>(options: { includeCauseExtension?: boolean; truncateExtensions?: boolean }): APIError
   }
   interface FactoryI {

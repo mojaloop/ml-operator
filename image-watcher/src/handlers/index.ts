@@ -25,8 +25,19 @@
 
  --------------
  ******/
+import { Util } from '@mojaloop/central-services-shared'
+
+import Health from './health'
+import Metrics from './metrics'
 import Hello from './hello'
 
+const OpenapiBackend = Util.OpenapiBackend
+
 export default {
-  HelloGet: Hello.get
+  HelloGet: Hello.get,
+  HealthGet: Health.get,
+  MetricsGet: Metrics.get,
+  validationFail: OpenapiBackend.validationFail,
+  notFound: OpenapiBackend.notFound,
+  methodNotAllowed: OpenapiBackend.methodNotAllowed
 }
