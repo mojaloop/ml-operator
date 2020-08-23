@@ -3,6 +3,15 @@
 Image-Watcher (name TBD) is a standalone service which watches docker hub for image updates and caches them periodically. Other services can query image watcher to ask of there is a newer version for a given image, based on a provided upgrade strategy
 
 
+## Try it out
+
+```bash
+curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=major"| jq
+curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=minor"| jq
+curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=bugfix"| jq
+curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=patch"| jq
+```
+
 ## API
 
 See [./src/interface/swagger.yaml](./src/interface/swagger.yaml) for the full spec.
