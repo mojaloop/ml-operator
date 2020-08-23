@@ -1,7 +1,7 @@
 {
   "include": [
     "src",
-    // "test",
+    "test",
     "ambient.d.ts",
     "jest.bdd.config.js",
     "jest.config.js",
@@ -9,6 +9,8 @@
   ],
   "exclude": [
     "node_modules",
+    "test/unit/",
+    "test/step-definitions/",
     "dist",
     "coverage"
   ],

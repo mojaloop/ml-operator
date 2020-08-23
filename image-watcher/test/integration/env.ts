@@ -2,12 +2,7 @@ import config from '~/shared/config'
 
 const env = {
   config: config,
-  inbound: {
-    baseUri: `http://127.0.0.1:${config.INBOUND.PORT}`
-  },
-  outbound: {
-    baseUri: `http://127.0.0.1:${config.OUTBOUND.PORT}`
-  }
+  baseUri: `http://127.0.0.1:${config.PORT}`
 }
 
 export default env

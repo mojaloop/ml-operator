@@ -24,4 +24,14 @@ export class ImageCacher extends KVS {
     await this.set(plainImageName, combined)
   }
 
+  public async getImages(imageName: ImageName): Promise<Array<ImageSpec>> {
+    const plainImageName = imageNameAsString(imageName)
+    const existing = await this.get<Array<ImageSpec>>(plainImageName)
+    if (!existing) {
+      throw new Error(`Image not found in cache: ${plainImageName}`)
+    }
+
+    return existing;
+  }
+
 }

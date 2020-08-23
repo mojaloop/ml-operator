@@ -35,6 +35,47 @@ Where strategy is one of:
 > TODO: Look into the semantic versioning spec to make this a little more kosher and follow some pre-defined protocols
 
 
+## Docker API Snippets
+
+```bash
+GET /v2/_catalog
+
+curl -v https://registry-1.docker.io/v2/mojaloop/central-ledger
+curl -v https://registry-1.docker.io/v2/mongo
+
+curl https://hub.docker.com/v2/search/repositories/?query=alpine
+
+curl https://hub.docker.com/v2/mongo/tags/list
+
+
+#reference: https://www.arthurkoziel.com/dockerhub-registry-api/
+
+# All mojaloop images...
+curl -s "https://hub.docker.com/v2/repositories/mojaloop/?page_size=100" | jq -r '.results|.[]|.name'
+
+export DOCKER_USERNAME="ldaly"
+# export DOCKER_PASSWORD="******"
+export TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+
+
+export AUTH_SERVICE='registry.docker.io'
+export AUTH_SCOPE="repository:mojaloop/central-ledger:pull"
+# export AUTH_SCOPE="repository:mongo/mongo:pull"
+export REGISTRY_TOKEN=$(curl -fsSL "https://auth.docker.io/token?service=$AUTH_SERVICE&scope=$AUTH_SCOPE" | jq --raw-output '.token')
+
+# TODO: pagination doesn't work for some reason...
+curl -fsSL \
+    -H "Authorization: Bearer $REGISTRY_TOKEN" \
+    "https://registry-1.docker.io/v2/mojaloop/central-ledger/tags/list?n=10&last=10" | jq
+
+curl -v \
+    -H "Authorization: Bearer $REGISTRY_TOKEN" \
+    "https://registry-1.docker.io/v2/mongo/mongo/tags/list?n=10&last=10"
+
+
+my-private-repo
+```
+
 
 ## TODO
 

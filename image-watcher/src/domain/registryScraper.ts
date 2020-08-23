@@ -1,12 +1,14 @@
 import { ImageSpec, ImageName } from './types';
 import { imageNameAsString } from '~/shared/utils';
 import { ImageCacher } from './imageCacher';
+import { RegistryClient } from '~/shared/registryClient';
 
 
 export interface RegistryScraperConfig {
   refreshTimeMs: number;
   watchList: Array<ImageName>;
   imageCacher: ImageCacher;
+  registryClient: RegistryClient
 
   // Callback function when new images are found
   // onNewImagesFoundFunc: (images: Array<ImageSpec>) => void;
@@ -37,19 +39,23 @@ export default class RegistryScraper {
 
   //This could be moved elsewhere?
   public async scrapeImage(spec: ImageName): Promise<Array<ImageSpec>> {
-    //TODO: API calls, pagination etc.
-    return [
-      {
-        orgId: spec.orgId,
-        imageName: spec.imageName,
-        tag: 'v11.0.0'
-      },
-      {
-        orgId: spec.orgId,
-        imageName: spec.imageName,
-        tag: 'v11.1.0'
-      },
-    ]
+    const images = await this.config.registryClient.getTagsForImage(spec.orgId, spec.imageName)
+
+    return images;
+
+    // //TODO: API calls, pagination etc.
+    // return [
+    //   {
+    //     orgId: spec.orgId,
+    //     imageName: spec.imageName,
+    //     tag: 'v11.0.0'
+    //   },
+    //   {
+    //     orgId: spec.orgId,
+    //     imageName: spec.imageName,
+    //     tag: 'v11.1.0'
+    //   },
+    // ]
   }
 
   public async scrapeAllImages(): Promise<void> {
@@ -61,6 +67,7 @@ export default class RegistryScraper {
       
       //Get the latest updates
       // TODO: repsect the cursor somehow or something...
+      // Maybe we don't need to do this - the pagination doesn't work on docker hub
       const images = await this.scrapeImage(keyCursor.imageName)
 
       // Update the cache
@@ -74,8 +81,11 @@ export default class RegistryScraper {
    * @returns { () => void } Stop - a function to stop the scraper
    * 
    */
-  async startScraping(): Promise<() => void> {
+  async startScraping(refreshTimeMs: number): Promise<() => void> {
+    console.log('performing a new scrape!', this.config)
     await this.scrapeAllImages()
+
+    setTimeout(() => this.startScraping(refreshTimeMs), refreshTimeMs)
 
     return () => {}
   }

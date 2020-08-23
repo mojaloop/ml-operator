@@ -38,6 +38,7 @@ import { RedisConnectionConfig } from './shared/redis-connection'
 import Logger from '@mojaloop/central-services-logger'
 import RegistryScraper, { RegistryScraperConfig } from './domain/registryScraper'
 import { AppContext } from './server/create'
+import { RegistryClientConfig, RegistryClient } from './shared/registryClient'
 
 
 
@@ -71,7 +72,13 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
       },
     ]
 
-    // String init our domain classes
+    // Set up the docker hub client
+    const rcConfig: RegistryClientConfig = {
+      cacheResults: 60
+    }
+    const rc = new RegistryClient(rcConfig)
+
+    // init our domain classes
     const redisConfig: RedisConnectionConfig = {
       host: redis.HOST,
       port: redis.PORT,
@@ -84,13 +91,12 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
     const registryScraperConfig: RegistryScraperConfig = {
       refreshTimeMs: 30 * 1000, //30 seconds
       watchList,
-      imageCacher
+      imageCacher,
+      registryClient: rc,
     }
     const registryScraper = new RegistryScraper(registryScraperConfig)
 
-    const imageRepoConfig: ImageRepoConfig = {
-      watchList
-    }
+    const imageRepoConfig: ImageRepoConfig = { imageCacher }
     const imageRepo = new ImageRepo(imageRepoConfig)
     const appContext: AppContext = {
       registryScraper,
@@ -108,7 +114,7 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
     await index.server.setupAndStart(serverConfig, apiPath, handlers, appContext)
 
     // Start the scraper
-    registryScraper.startScraping()
+    registryScraper.startScraping(30 * 1000) // Check every 30 seconds
   }
 }
 
