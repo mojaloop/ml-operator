@@ -26,39 +26,21 @@
  --------------
  ******/
 
-import create, { ServerConfig } from './create'
+import create, { ServerConfig, AppContext } from './create'
 import { Handler } from 'openapi-backend'
 import { Server } from '@hapi/hapi'
 import extensions from './extensions'
 import plugins from './plugins'
 import start from './start'
-import ImageRepo, { ImageRepoConfig } from '~/domain/imageRepo'
 
 export default async function setupAndStart (
   config: ServerConfig,
   apiPath: string,
-  handlers: { [handler: string]: Handler }
+  handlers: { [handler: string]: Handler },
+  appContext: AppContext
 ): Promise<Server> {
-  // TODO: init redis connection
-  const imageRepoConfig: ImageRepoConfig = {
-    // TODO: load from config!
-    imagesToWatch: [
-      {
-        orgId: 'mojaloop',
-        imageName: 'central-ledger',
-      },
-      {
-        orgId: 'ldaly',
-        imageName: 'central-ledger',
-      },
-      {
-        orgId: 'mojaloop',
-        imageName: 'ml-api-adapter',
-      },
-    ]
-  }
-  const imageRepo = new ImageRepo(imageRepoConfig)
-  const server = create(config, { imageRepo })
+
+  const server = create(config, appContext)
   await plugins.register(server, apiPath, handlers)
   await extensions.register(server)
   await start(server)

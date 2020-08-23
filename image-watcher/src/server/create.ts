@@ -28,6 +28,8 @@ import { Server } from '@hapi/hapi'
 import onValidateFail from '~/handlers/onValidateFail'
 import { validateRoutes } from '@mojaloop/central-services-error-handling'
 import ImageRepo from '~/domain/imageRepo'
+import RegistryScraper from '~/domain/registryScraper'
+import { ImageCacher } from '~/domain/imageCacher'
 
 // minimal server configuration
 export interface ServerConfig {
@@ -36,7 +38,9 @@ export interface ServerConfig {
 }
 
 export interface AppContext {
-  imageRepo: ImageRepo
+  imageRepo: ImageRepo,
+  imageCacher: ImageCacher,
+  registryScraper: RegistryScraper,
 }
 
 export default function create (config: ServerConfig, appContext: AppContext): Server {

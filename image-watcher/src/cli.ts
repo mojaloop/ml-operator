@@ -32,6 +32,14 @@ import { Handler } from 'openapi-backend'
 import Handlers from '~/handlers'
 import index from './index'
 import path from 'path'
+import ImageRepo, { ImageRepoConfig } from './domain/imageRepo'
+import { ImageCacher } from './domain/imageCacher'
+import { RedisConnectionConfig } from './shared/redis-connection'
+import Logger from '@mojaloop/central-services-logger'
+import RegistryScraper, { RegistryScraperConfig } from './domain/registryScraper'
+import { AppContext } from './server/create'
+
+
 
 // handle script parameters
 const program = new Command(PACKAGE.name)
@@ -46,6 +54,49 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
     // update config from program parameters,
     const port = ConvictConfig.get('PORT')
     const host = ConvictConfig.get('HOST')
+    const redis = ConvictConfig.get('REDIS')
+    // TODO: load from config!
+    const watchList = [
+      {
+        orgId: 'mojaloop',
+        imageName: 'central-ledger',
+      },
+      {
+        orgId: 'ldaly',
+        imageName: 'central-ledger',
+      },
+      {
+        orgId: 'mojaloop',
+        imageName: 'ml-api-adapter',
+      },
+    ]
+
+    // String init our domain classes
+    const redisConfig: RedisConnectionConfig = {
+      host: redis.HOST,
+      port: redis.PORT,
+      timeout: redis.TIMEOUT,
+      logger: Logger
+    }
+    const imageCacher = new ImageCacher(redisConfig)
+    await imageCacher.connect()
+
+    const registryScraperConfig: RegistryScraperConfig = {
+      refreshTimeMs: 30 * 1000, //30 seconds
+      watchList,
+      imageCacher
+    }
+    const registryScraper = new RegistryScraper(registryScraperConfig)
+
+    const imageRepoConfig: ImageRepoConfig = {
+      watchList
+    }
+    const imageRepo = new ImageRepo(imageRepoConfig)
+    const appContext: AppContext = {
+      registryScraper,
+      imageCacher,
+      imageRepo, 
+    }
 
     // resolve the path to openapi v3 definition file
     const apiPath = path.resolve(__dirname, `../src/interface/swagger.yaml`)
@@ -54,7 +105,10 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
       host
     }
     // setup & start @hapi server
-    await index.server.setupAndStart(serverConfig, apiPath, handlers)
+    await index.server.setupAndStart(serverConfig, apiPath, handlers, appContext)
+
+    // Start the scraper
+    registryScraper.startScraping()
   }
 }
 

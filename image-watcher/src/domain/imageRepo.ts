@@ -2,7 +2,7 @@ import { UpgradeStrategy, ImageSpec } from './types';
 
 
 export interface ImageRepoConfig {
-  imagesToWatch: Array<{
+  watchList: Array<{
     orgId: string,
     imageName: string,
   }>
@@ -30,24 +30,24 @@ export default class ImageRepo {
   }
   */
   orgImages: Map<string, Map<string, Array<string>>>
-  imagesToWatch: Array<{
+  watchList: Array<{
     orgId: string,
     imageName: string,
   }>;
 
   constructor(config: ImageRepoConfig) {
-    this.imagesToWatch = config.imagesToWatch;
+    this.watchList = config.watchList;
 
     this.orgImages = new Map<string, Map<string, Array<string>>>()
     // Add org roots
-    this.imagesToWatch.forEach(img => {
+    this.watchList.forEach(img => {
       if (!this.orgImages.has(img.orgId)) { 
         this.orgImages.set(img.orgId, new Map<string, Array<string>>())
       }
     })
 
     // Add image leaves
-    this.imagesToWatch.forEach(img => {
+    this.watchList.forEach(img => {
       const orgMap = this.orgImages.get(img.orgId)
       // TODO: make more elegant
       if (!orgMap) {

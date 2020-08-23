@@ -53,6 +53,7 @@ export default class RegistryScraper {
   }
 
   public async scrapeAllImages(): Promise<void> {
+    console.log('scraping all images')
     const keys = Array.from(this.watchMapWithCursor.keys())
 
     await Promise.all(keys.map(async key => {
@@ -73,7 +74,8 @@ export default class RegistryScraper {
    * @returns { () => void } Stop - a function to stop the scraper
    * 
    */
-  startScraping(): () => void {
+  async startScraping(): Promise<() => void> {
+    await this.scrapeAllImages()
 
     return () => {}
   }
