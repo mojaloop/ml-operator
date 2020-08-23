@@ -62,14 +62,14 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
         orgId: 'mojaloop',
         imageName: 'central-ledger',
       },
-      // {
-      //   orgId: 'ldaly',
-      //   imageName: 'central-ledger',
-      // },
-      // {
-      //   orgId: 'mojaloop',
-      //   imageName: 'ml-api-adapter',
-      // },
+      {
+        orgId: 'ldaly',
+        imageName: 'central-ledger',
+      },
+      {
+        orgId: 'mojaloop',
+        imageName: 'ml-api-adapter',
+      },
     ]
 
     // Set up the docker hub client
