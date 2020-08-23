@@ -18,10 +18,17 @@ export class ImageCacher extends KVS {
     const plainImageName = imageNameAsString(imageName)
     const existing = await this.get<Array<ImageSpec>>(plainImageName) || []
 
-    const combined = existing.concat(newImages)
-    //TODO: some fancy ordering by semantic version
+    const dedupMap: {[index: string]: ImageSpec} = {}
+    existing.forEach(image => dedupMap[image.tag] = image)
+    newImages.forEach(image => dedupMap[image.tag] = image)
+    const combinedDedupedList = Object.keys(dedupMap).map(key => {
+      const image = dedupMap[key];
+      return image;
+    })
 
-    await this.set(plainImageName, combined)
+    //TODO: optimize by ordering by semantic version?
+
+    await this.set(plainImageName, combinedDedupedList)
   }
 
   public async getImages(imageName: ImageName): Promise<Array<ImageSpec>> {

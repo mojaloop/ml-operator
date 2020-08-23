@@ -39,33 +39,16 @@ export default class RegistryScraper {
 
   //This could be moved elsewhere?
   public async scrapeImage(spec: ImageName): Promise<Array<ImageSpec>> {
-    const images = await this.config.registryClient.getTagsForImage(spec.orgId, spec.imageName)
-
-    return images;
-
-    // //TODO: API calls, pagination etc.
-    // return [
-    //   {
-    //     orgId: spec.orgId,
-    //     imageName: spec.imageName,
-    //     tag: 'v11.0.0'
-    //   },
-    //   {
-    //     orgId: spec.orgId,
-    //     imageName: spec.imageName,
-    //     tag: 'v11.1.0'
-    //   },
-    // ]
+    return await this.config.registryClient.getTagsForImage(spec.orgId, spec.imageName)
   }
 
   public async scrapeAllImages(): Promise<void> {
-    console.log('scraping all images')
     const keys = Array.from(this.watchMapWithCursor.keys())
 
     await Promise.all(keys.map(async key => {
       const keyCursor = this.watchMapWithCursor.get(key)!
       
-      //Get the latest updates
+      // Get the latest updates
       // TODO: repsect the cursor somehow or something...
       // Maybe we don't need to do this - the pagination doesn't work on docker hub
       const images = await this.scrapeImage(keyCursor.imageName)
@@ -82,11 +65,12 @@ export default class RegistryScraper {
    * 
    */
   async startScraping(refreshTimeMs: number): Promise<() => void> {
-    console.log('performing a new scrape!', this.config)
+    console.log('performing a new scrape!')
     await this.scrapeAllImages()
 
     setTimeout(() => this.startScraping(refreshTimeMs), refreshTimeMs)
 
+    // TODO: some way to cancel this whole thing...
     return () => {}
   }
 }

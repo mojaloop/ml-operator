@@ -5,6 +5,12 @@ import { ImageSpec } from '~/domain/types';
 import dockerHubAPI from 'docker-hub-api'
 
 
+export interface PaginatedResult<T> {
+  count: number
+  next: number | null
+  previous: number | null
+  results: T
+}
 export interface DockerHubApiImage { 
   creator: number,
   id: number,
@@ -50,8 +56,12 @@ export class RegistryClient {
   }
 
   public async getTagsForImage(user: string, image: string): Promise<Array<ImageSpec>> {
-    const result: Array<DockerHubApiImage> = await dockerHubAPI.tags(user, image)
-    const images: Array<ImageSpec> = result.map(img => ({
+    console.log('getTagsForImage', user, image)
+    const result: PaginatedResult<Array<DockerHubApiImage>> | Array<DockerHubApiImage> = await dockerHubAPI.tags(user, image)
+    const imageList: Array<DockerHubApiImage> = !Array.isArray(result) ? result.results : result
+    console.log('getTagsForImage found', imageList.length, 'images')
+
+    const images: Array<ImageSpec> = imageList.map(img => ({
       orgId: user,
       imageName: image,
       tag: img.name
