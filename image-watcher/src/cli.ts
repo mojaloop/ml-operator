@@ -62,19 +62,19 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
         orgId: 'mojaloop',
         imageName: 'central-ledger',
       },
-      {
-        orgId: 'ldaly',
-        imageName: 'central-ledger',
-      },
-      {
-        orgId: 'mojaloop',
-        imageName: 'ml-api-adapter',
-      },
+      // {
+      //   orgId: 'ldaly',
+      //   imageName: 'central-ledger',
+      // },
+      // {
+      //   orgId: 'mojaloop',
+      //   imageName: 'ml-api-adapter',
+      // },
     ]
 
     // Set up the docker hub client
     const rcConfig: RegistryClientConfig = {
-      cacheResults: 60
+      cacheResults: false
     }
     const rc = new RegistryClient(rcConfig)
 
@@ -89,7 +89,7 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
     await imageCacher.connect()
 
     const registryScraperConfig: RegistryScraperConfig = {
-      refreshTimeMs: 30 * 1000, //30 seconds
+      refreshTimeMs: 60 * 1 * 1000, // 60 seconds
       watchList,
       imageCacher,
       registryClient: rc,
