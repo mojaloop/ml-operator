@@ -2,14 +2,18 @@ import { UpgradeStrategy, ImageSpec } from './types';
 
 
 export interface ImageRepoConfig {
-  refreshTimeMs: number;
   imagesToWatch: Array<{
     orgId: string,
     imageName: string,
   }>
 }
 
+/**
+ * @class ImageRepo
+ * @description Maintains a list of watched images
+ */
 export default class ImageRepo {
+  // TODO: make this just a simple map with an array...
   // A nested map of orgs, images, available tags
   /*
   {
@@ -26,7 +30,6 @@ export default class ImageRepo {
   }
   */
   orgImages: Map<string, Map<string, Array<string>>>
-  refreshTimeMs: number;
   imagesToWatch: Array<{
     orgId: string,
     imageName: string,
@@ -34,7 +37,6 @@ export default class ImageRepo {
 
   constructor(config: ImageRepoConfig) {
     this.imagesToWatch = config.imagesToWatch;
-    this.refreshTimeMs = config.refreshTimeMs;
 
     this.orgImages = new Map<string, Map<string, Array<string>>>()
     // Add org roots

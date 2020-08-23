@@ -5,9 +5,11 @@ export enum UpgradeStrategy {
   MAJOR = 'MAJOR',
 }
 
-
-export interface ImageSpec {
+export interface ImageName {
   orgId: string,
   imageName: string,
+}
+
+export interface ImageSpec extends ImageName {
   tag: string,
 }

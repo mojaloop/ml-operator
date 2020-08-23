@@ -27,7 +27,7 @@
 import { Server } from '@hapi/hapi'
 import onValidateFail from '~/handlers/onValidateFail'
 import { validateRoutes } from '@mojaloop/central-services-error-handling'
-import ImageRepo from '~/domain/image'
+import ImageRepo from '~/domain/imageRepo'
 
 // minimal server configuration
 export interface ServerConfig {

@@ -32,7 +32,7 @@ import { Server } from '@hapi/hapi'
 import extensions from './extensions'
 import plugins from './plugins'
 import start from './start'
-import ImageRepo, { ImageRepoConfig } from '~/domain/image'
+import ImageRepo, { ImageRepoConfig } from '~/domain/imageRepo'
 
 export default async function setupAndStart (
   config: ServerConfig,
