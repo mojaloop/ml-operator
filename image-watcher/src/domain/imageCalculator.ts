@@ -1,6 +1,7 @@
 import { UpgradeStrategy, ImageSpec } from './types';
 import { ImageCacher } from './imageCacher';
 import { semanticSplit, semanticSort } from '~/shared/utils';
+import Logger from '@mojaloop/central-services-logger';
 
 
 export interface ImageCalculatorConfig {
@@ -31,7 +32,8 @@ export default class ImageCalculator {
         MINOR = splits.MINOR
         BUGFIX = splits.BUGFIX
       } catch (err) {
-        console.log(`Error parsing image: ${img.tag}`)
+        Logger.warn(`ImageCalculator.getImage, error parsing image, ${img.tag}`)
+        Logger.debug(err)
         return
       }
 
@@ -63,9 +65,6 @@ export default class ImageCalculator {
 
     //Sort and get the biggest
     allPatchImages.sort(semanticSort)
-
-    console.log('sorted patch images', allPatchImages.map(img => img.tag))
-
     return allPatchImages[0]
   }
 }

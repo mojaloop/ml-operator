@@ -11,12 +11,11 @@ describe('registryClient', () => {
         cacheResults: false
       }
       const rc = new RegistryClient(rcConfig)
-      
+
       // Act
       const result = await rc.getTagsForImage('mojaloop', 'central-ledger')
-      
+
       // Assert
-      console.log('result is', result)
       expect(result.length).toBeGreaterThan(0)
     })
   })

@@ -1,6 +1,7 @@
 import { KVS } from '~/shared/kvs';
 import { ImageSpec, ImageName } from './types';
-import { imageNameAsString, semanticSort } from '~/shared/utils';
+import { imageNameAsString, semanticSort, semanticSplit } from '~/shared/utils';
+import Logger from '@mojaloop/central-services-logger';
 
 
 /**
@@ -22,15 +23,28 @@ export class ImageCacher extends KVS {
     const dedupMap: {[index: string]: ImageSpec} = {}
     existing.forEach(image => dedupMap[image.tag] = image)
     newImages.forEach(image => dedupMap[image.tag] = image)
-    const combinedDedupedList = Object.keys(dedupMap).map(key => {
+    let combinedDedupedList = Object.keys(dedupMap).map(key => {
       const image = dedupMap[key];
       return image;
     })
 
-    // Sort by semantic versioning
-    combinedDedupedList.sort(semanticSort)
+    // Remove any badly formatted images
+    const filteredList = combinedDedupedList.filter(img => {
+      try {
+        // If it splits, then the format is fine
+        semanticSplit(img.tag)
+      } catch (err) {
+        return false
+      }
 
-    await this.set(plainImageName, combinedDedupedList)
+      return true
+    })
+    // Sort by semantic versioning
+    .sort(semanticSort)
+
+
+    Logger.debug(`ImageCacher.appendImages - saved ${plainImageName} with ${filteredList.length} images`)
+    await this.set(plainImageName, filteredList)
   }
 
   public async getImages(imageName: ImageName): Promise<Array<ImageSpec>> {

@@ -14,6 +14,14 @@ curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=
 curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=patch"| jq
 ```
 
+## Running with Docker-Compose
+
+```bash
+docker-compose up -d
+# wait for everything to be up and running
+curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=major"| jq
+```
+
 ## API
 
 See [./src/interface/swagger.yaml](./src/interface/swagger.yaml) for the full spec.
@@ -39,6 +47,18 @@ Where strategy is one of:
 - `bugfix` - will return the latest bugfix version,  i.e. `v11.0.Z`
 - `minor` - will return the latest minor version, i.e. `v11.Y.Z`
 - `major` - will retun the latest major version, i.e. `vX.Y.Z`
+
+## Developing
+```bash
+# install dependencies
+npm install
+
+# run redis
+docker-compose up -d redis
+
+# run the server in 'watch' mode
+npm run dev
+```
 
 
 ## Docker API Snippets

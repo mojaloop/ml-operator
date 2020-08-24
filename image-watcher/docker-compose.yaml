@@ -6,14 +6,13 @@ networks:
 
 services:
   image-watcher:
+    image: mojaloop/image-watcher:local
     container_name: image-watcher
     build:
       context: ./
-    command: sh -c "/opt/image-watcher/wait4/wait4.js image-watcher && npm run start:inbound"
+    command: sh -c "/opt/image-watcher/wait4/wait4.js image-watcher && npm run start"
     volumes:
       - ./docker/wait4:/opt/image-watcher/wait4
-    environment:
-      # - NODE_ENV=test
     networks:
       - mojaloop-net
     ports:

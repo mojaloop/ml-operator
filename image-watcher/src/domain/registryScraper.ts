@@ -2,6 +2,7 @@ import { ImageSpec, ImageName } from './types';
 import { imageNameAsString } from '~/shared/utils';
 import { ImageCacher } from './imageCacher';
 import { RegistryClient } from '~/shared/registryClient';
+import Logger from '@mojaloop/central-services-logger';
 
 
 export interface RegistryScraperConfig {
@@ -62,7 +63,7 @@ export default class RegistryScraper {
    *
    */
   async startScraping(refreshTimeMs: number): Promise<() => void> {
-    console.log('performing a new scrape!')
+    Logger.info('RegistryScraper.startScraping() - performing a new scrape')
     await this.scrapeAllImages()
 
     setTimeout(() => this.startScraping(refreshTimeMs), refreshTimeMs)

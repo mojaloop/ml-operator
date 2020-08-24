@@ -28,6 +28,7 @@
 // https://github.com/mozilla/node-convict
 import Convict from 'convict'
 import PACKAGE from '../../package.json'
+import Logger from '@mojaloop/central-services-logger';
 export { PACKAGE }
 
 // Add custom docker image array support
@@ -35,7 +36,6 @@ Convict.addFormat({
   name: 'source-array',
   //@ts-ignore
   validate: function (sources: any | Array<string>, schema: any) {
-    console.log('calling validate on source', sources, schema.children)
     if (!Array.isArray(sources)) {
       throw new Error('Must be of type Array');
     }
@@ -142,7 +142,7 @@ export const ConvictConfig = Convict<ServiceConfig>({
   },
   SCRAPE_TIME_MS: {
     doc: 'How long to wait before scraping the docker registry again',
-    format: 'number',
+    format: 'nat',
     default: 60 * 1000, //60 seconds
   }
 })
@@ -166,6 +166,6 @@ const config: ServiceConfig = {
   SCRAPE_TIME_MS: ConvictConfig.get('SCRAPE_TIME_MS')
 }
 
-console.log('parsed config is', config)
+Logger.debug(`Config - parsed config is ${JSON.stringify(config, null, 2)}`)
 
 export default config
