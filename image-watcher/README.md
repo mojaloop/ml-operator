@@ -90,8 +90,9 @@ my-private-repo
 
 - [x] repo setup copy from other thing
 - [x] simple http server setup
-- [ ] draft api
-- [ ] docker hub scraper
-- [ ] configure cron to scrape (in memory only)
-- [ ] update api
-- [ ] business logic for `patch`
+- [x] draft api
+- [x] docker hub scraper
+- [x] configure cron to scrape and write to redis
+- [x] update api
+- [x] business logic for `patch`
+- [ ] cleanup repo: package.json, readmes, unused files, tests

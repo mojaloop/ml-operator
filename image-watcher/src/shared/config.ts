@@ -30,6 +30,32 @@ import Convict from 'convict'
 import PACKAGE from '../../package.json'
 export { PACKAGE }
 
+// Add array support
+Convict.addFormat({
+  name: 'source-array',
+  //@ts-ignore
+  validate: function (sources: any | Array<string>, schema: any) {
+    console.log('calling validate on source', sources, schema.children)
+    if (!Array.isArray(sources)) {
+      throw new Error('Must be of type Array');
+    }
+
+    sources.forEach(source => {
+      if (typeof source !== 'string') {
+        throw new Error('Docker image name must be a string')
+      }
+      if (source.split('/').length !== 2) {
+        throw new Error('Docker image name must be of format `<org>/<image>`, e.g. mojaloop/central-ledger')
+      }
+    })
+
+    // TODO: this doesn't seem to work...
+    // sources.forEach(source => {
+      // Convict(schema.children).load(source).validate()
+    // })
+  }
+});
+
 // interface to represent service configuration
 export interface ServiceConfig {
   ENV: string;
@@ -45,6 +71,7 @@ export interface ServiceConfig {
     SHOW_HIDDEN: boolean;
     COLOR: boolean;
   };
+  IMAGES: Array<string>
 }
 
 // Declare configuration schema, default values and bindings to environment variables
@@ -104,12 +131,27 @@ export const ConvictConfig = Convict<ServiceConfig>({
       format: 'Boolean',
       default: true
     }
+  },
+  IMAGES: {
+    doc: 'A list of images to watch for',
+    format: 'source-array',
+    default: [],
+    // TODO: fix typings here, and add docker image parsing
+    //@ts-ignore
+    children: {
+      doc: 'A docker image name',
+      format: 'string',
+      default: null
+    }
   }
 })
+
+
 
 // Load environment dependent configuration
 const env = ConvictConfig.get('ENV')
 ConvictConfig.loadFile(`${__dirname}/../../config/${env}.json`)
+
 
 // Perform configuration validation
 ConvictConfig.validate({ allowed: 'strict' })
@@ -120,7 +162,10 @@ const config: ServiceConfig = {
   HOST: ConvictConfig.get('HOST'),
   PORT: ConvictConfig.get('PORT'),
   REDIS: ConvictConfig.get('REDIS'),
-  INSPECT: ConvictConfig.get('INSPECT')
+  INSPECT: ConvictConfig.get('INSPECT'),
+  IMAGES: ConvictConfig.get('IMAGES')
 }
+
+console.log('parsed config is', config)
 
 export default config

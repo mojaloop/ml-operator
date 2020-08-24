@@ -56,21 +56,10 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
     const port = ConvictConfig.get('PORT')
     const host = ConvictConfig.get('HOST')
     const redis = ConvictConfig.get('REDIS')
-    // TODO: load from config!
-    const watchList = [
-      {
-        orgId: 'mojaloop',
-        imageName: 'central-ledger',
-      },
-      {
-        orgId: 'ldaly',
-        imageName: 'central-ledger',
-      },
-      {
-        orgId: 'mojaloop',
-        imageName: 'ml-api-adapter',
-      },
-    ]
+    const watchList = ConvictConfig.get('IMAGES').map(imageStr => {
+      const [ orgId, imageName ] = imageStr.split('/')
+      return { orgId, imageName}
+    })
 
     // Set up the docker hub client
     const rcConfig: RegistryClientConfig = {
@@ -101,7 +90,7 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
     const appContext: AppContext = {
       registryScraper,
       imageCacher,
-      imageRepo, 
+      imageRepo,
     }
 
     // resolve the path to openapi v3 definition file

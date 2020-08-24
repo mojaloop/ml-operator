@@ -10,5 +10,9 @@
     "DEPTH": 4,
     "SHOW_HIDDEN": false,
     "COLOR": true
-  }
+  },
+  "IMAGES": [
+    "mojaloop/central-ledger",
+    "mojaloop/ml-api-adapter"
+  ]
 }
