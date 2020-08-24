@@ -30,7 +30,7 @@ import Convict from 'convict'
 import PACKAGE from '../../package.json'
 export { PACKAGE }
 
-// Add array support
+// Add custom docker image array support
 Convict.addFormat({
   name: 'source-array',
   //@ts-ignore
@@ -48,11 +48,6 @@ Convict.addFormat({
         throw new Error('Docker image name must be of format `<org>/<image>`, e.g. mojaloop/central-ledger')
       }
     })
-
-    // TODO: this doesn't seem to work...
-    // sources.forEach(source => {
-      // Convict(schema.children).load(source).validate()
-    // })
   }
 });
 
@@ -71,7 +66,8 @@ export interface ServiceConfig {
     SHOW_HIDDEN: boolean;
     COLOR: boolean;
   };
-  IMAGES: Array<string>
+  IMAGES: Array<string>;
+  SCRAPE_TIME_MS: number;
 }
 
 // Declare configuration schema, default values and bindings to environment variables
@@ -143,15 +139,18 @@ export const ConvictConfig = Convict<ServiceConfig>({
       format: 'string',
       default: null
     }
+  },
+  SCRAPE_TIME_MS: {
+    doc: 'How long to wait before scraping the docker registry again',
+    format: 'number',
+    default: 60 * 1000, //60 seconds
   }
 })
-
 
 
 // Load environment dependent configuration
 const env = ConvictConfig.get('ENV')
 ConvictConfig.loadFile(`${__dirname}/../../config/${env}.json`)
-
 
 // Perform configuration validation
 ConvictConfig.validate({ allowed: 'strict' })
@@ -163,7 +162,8 @@ const config: ServiceConfig = {
   PORT: ConvictConfig.get('PORT'),
   REDIS: ConvictConfig.get('REDIS'),
   INSPECT: ConvictConfig.get('INSPECT'),
-  IMAGES: ConvictConfig.get('IMAGES')
+  IMAGES: ConvictConfig.get('IMAGES'),
+  SCRAPE_TIME_MS: ConvictConfig.get('SCRAPE_TIME_MS')
 }
 
 console.log('parsed config is', config)

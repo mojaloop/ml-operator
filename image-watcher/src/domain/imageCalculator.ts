@@ -1,51 +1,20 @@
 import { UpgradeStrategy, ImageSpec } from './types';
 import { ImageCacher } from './imageCacher';
+import { semanticSplit, semanticSort } from '~/shared/utils';
 
 
-export interface ImageRepoConfig {
+export interface ImageCalculatorConfig {
   imageCacher: ImageCacher,
 }
 
-const zeroPad = (num: number, places: number) => String(num).padStart(places, '0')
-
-// Make a lexicographically sortable tag
-const semanticSortable = (tag: string): string => {
-  const { MAJOR, MINOR, BUGFIX, PATCH } = semanticSplit(tag)
-  const bugfixSplit = BUGFIX.split('-')
-  // TODO Handle patch tags better...
-
-  const majorInt = parseInt(MAJOR.replace('v', ''))
-  const minorInt = parseInt(MINOR)
-  const bugfixInt = parseInt(bugfixSplit[0])
-  const bugfixSuffix = bugfixSplit.length > 1 ? `-${bugfixSplit[1]}` : ''
-  const patchInt = parseInt(PATCH)
-
-  return `${zeroPad(majorInt, 4)}.${zeroPad(minorInt, 4)}.${zeroPad(bugfixInt, 4)}${bugfixSuffix}.${zeroPad(patchInt, 4)}`
-}
-
-const semanticSplit = (tag: string): { MAJOR: string, MINOR: string, BUGFIX: string, PATCH: string } => {
-  const [MAJOR, MINOR, BUGFIX, PATCH] = tag.split('.')
-
-  if (!MAJOR || !MINOR || !BUGFIX) {
-    throw new Error("Couldn't parse tag")
-  }
-
-  return {
-    MAJOR,
-    MINOR,
-    BUGFIX,
-    PATCH
-  }
-}
-
 /**
- * @class ImageRepo
- * @description Maintains a list of watched images
+ * @class ImageCalculator
+ * @description Calculates the next image based on the current image, the scraped images, and an upgrade strategy
  */
-export default class ImageRepo {
-  private config: ImageRepoConfig;
+export default class ImageCalculator {
+  private config: ImageCalculatorConfig;
 
-  constructor(config: ImageRepoConfig) {
+  constructor(config: ImageCalculatorConfig) {
     this.config = config
   }
 
@@ -91,17 +60,9 @@ export default class ImageRepo {
     if (allPatchImages.length === 0) {
       throw new Error(`Invalid image supplied: ${JSON.stringify(currentImage)}`)
     }
+
     //Sort and get the biggest
-    allPatchImages.sort((a, b) => {
-      const sortableTagA = semanticSortable(a.tag)
-      const sortableTagB = semanticSortable(b.tag)
-
-      if (sortableTagA === sortableTagB) {
-        return 0
-      }
-
-      return sortableTagA < sortableTagB ? 1 : -1
-    })
+    allPatchImages.sort(semanticSort)
 
     console.log('sorted patch images', allPatchImages.map(img => img.tag))
 

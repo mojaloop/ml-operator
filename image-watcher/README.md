@@ -4,8 +4,10 @@ Image-Watcher (name TBD) is a standalone service which watches docker hub for im
 
 
 ## Try it out
-
 ```bash
+docker-compose up -d redis
+npm run start
+
 curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=major"| jq
 curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=minor"| jq
 curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=bugfix"| jq
@@ -38,10 +40,7 @@ Where strategy is one of:
 - `patch` - will return the latest patch for the given image version
 - `bugfix` - will return the latest bugfix version,  i.e. `v11.0.Z`
 - `minor` - will return the latest minor version, i.e. `v11.Y.Z`
-- `major` - will  
-
-
-> TODO: Look into the semantic versioning spec to make this a little more kosher and follow some pre-defined protocols
+- `major` - will retun the latest major version, i.e. `vX.Y.Z`
 
 
 ## Docker API Snippets
@@ -96,3 +95,4 @@ my-private-repo
 - [x] update api
 - [x] business logic for `patch`
 - [ ] cleanup repo: package.json, readmes, unused files, tests
+- [ ] Look into the semantic versioning spec to make this a little more kosher and follow some pre-defined protocols

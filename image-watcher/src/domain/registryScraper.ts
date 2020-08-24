@@ -9,9 +9,6 @@ export interface RegistryScraperConfig {
   watchList: Array<ImageName>;
   imageCacher: ImageCacher;
   registryClient: RegistryClient
-
-  // Callback function when new images are found
-  // onNewImagesFoundFunc: (images: Array<ImageSpec>) => void;
 }
 
 export interface WatchCursor {
@@ -29,7 +26,7 @@ export default class RegistryScraper {
 
   constructor(config: RegistryScraperConfig) {
     this.config = config;
-  
+
     //Build a list of images to scrape, and setup default cursors
     this.watchMapWithCursor =  new Map<string, WatchCursor>()
     this.config.watchList.forEach(imageName => {
@@ -47,7 +44,7 @@ export default class RegistryScraper {
 
     await Promise.all(keys.map(async key => {
       const keyCursor = this.watchMapWithCursor.get(key)!
-      
+
       // Get the latest updates
       // TODO: repsect the cursor somehow or something...
       // Maybe we don't need to do this - the pagination doesn't work on docker hub
@@ -62,7 +59,7 @@ export default class RegistryScraper {
    * @function startScraping
    * @description Start scraping for the repos defied in the config
    * @returns { () => void } Stop - a function to stop the scraper
-   * 
+   *
    */
   async startScraping(refreshTimeMs: number): Promise<() => void> {
     console.log('performing a new scrape!')

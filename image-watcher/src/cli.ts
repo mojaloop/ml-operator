@@ -32,13 +32,13 @@ import { Handler } from 'openapi-backend'
 import Handlers from '~/handlers'
 import index from './index'
 import path from 'path'
-import ImageRepo, { ImageRepoConfig } from './domain/imageRepo'
 import { ImageCacher } from './domain/imageCacher'
 import { RedisConnectionConfig } from './shared/redis-connection'
 import Logger from '@mojaloop/central-services-logger'
 import RegistryScraper, { RegistryScraperConfig } from './domain/registryScraper'
 import { AppContext } from './server/create'
 import { RegistryClientConfig, RegistryClient } from './shared/registryClient'
+import ImageCalculator from './domain/imageCalculator'
 
 
 
@@ -61,7 +61,7 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
       return { orgId, imageName}
     })
 
-    // Set up the docker hub client
+    // Set up the docker registry/hub client
     const rcConfig: RegistryClientConfig = {
       cacheResults: false
     }
@@ -78,15 +78,14 @@ function mkStartAPI (handlers: { [handler: string]: Handler }): () => Promise<vo
     await imageCacher.connect()
 
     const registryScraperConfig: RegistryScraperConfig = {
-      refreshTimeMs: 60 * 1 * 1000, // 60 seconds
+      refreshTimeMs: ConvictConfig.get('SCRAPE_TIME_MS'),
       watchList,
       imageCacher,
       registryClient: rc,
     }
     const registryScraper = new RegistryScraper(registryScraperConfig)
 
-    const imageRepoConfig: ImageRepoConfig = { imageCacher }
-    const imageRepo = new ImageRepo(imageRepoConfig)
+    const imageRepo = new ImageCalculator({ imageCacher })
     const appContext: AppContext = {
       registryScraper,
       imageCacher,

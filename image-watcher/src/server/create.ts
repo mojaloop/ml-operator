@@ -27,7 +27,7 @@
 import { Server } from '@hapi/hapi'
 import onValidateFail from '~/handlers/onValidateFail'
 import { validateRoutes } from '@mojaloop/central-services-error-handling'
-import ImageRepo from '~/domain/imageRepo'
+import ImageRepo from '~/domain/imageCalculator'
 import RegistryScraper from '~/domain/registryScraper'
 import { ImageCacher } from '~/domain/imageCacher'
 

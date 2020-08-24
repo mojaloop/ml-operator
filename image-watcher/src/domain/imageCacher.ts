@@ -1,6 +1,6 @@
 import { KVS } from '~/shared/kvs';
 import { ImageSpec, ImageName } from './types';
-import { imageNameAsString } from '~/shared/utils';
+import { imageNameAsString, semanticSort } from '~/shared/utils';
 
 
 /**
@@ -11,13 +11,14 @@ export class ImageCacher extends KVS {
 
   /**
    * @function appendImages
-   * @description Add images to the redis cache for a given tag. 
-   * @param images 
+   * @description Add images to the redis cache for a given tag.
+   * @param images
    */
   public async appendImages(imageName: ImageName, newImages: Array<ImageSpec>): Promise<void> {
     const plainImageName = imageNameAsString(imageName)
     const existing = await this.get<Array<ImageSpec>>(plainImageName) || []
 
+    // Deduplicate the old and new lists
     const dedupMap: {[index: string]: ImageSpec} = {}
     existing.forEach(image => dedupMap[image.tag] = image)
     newImages.forEach(image => dedupMap[image.tag] = image)
@@ -26,7 +27,8 @@ export class ImageCacher extends KVS {
       return image;
     })
 
-    //TODO: optimize by ordering by semantic version?
+    // Sort by semantic versioning
+    combinedDedupedList.sort(semanticSort)
 
     await this.set(plainImageName, combinedDedupedList)
   }
