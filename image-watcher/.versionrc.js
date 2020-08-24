@@ -1,5 +1,5 @@
 module.exports = {
-  header: '# Changelog: [mojaloop/thirdparty-scheme-adapter](https://github.com/mojaloop/thirdparty-scheme-adapter)',
+  header: '# Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)',
   types: [
     { type: 'feat', section: 'Features' },
     { type: 'fix', section: 'Bug Fixes' },

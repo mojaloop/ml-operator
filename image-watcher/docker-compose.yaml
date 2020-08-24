@@ -5,26 +5,25 @@ networks:
     name: mojaloop-net
 
 services:
-  inbound-thirdparty-scheme-adapter:
-    container_name: inbound-thirdparty-scheme-adapter
+  image-watcher:
+    container_name: image-watcher
     build:
       context: ./
-      dockerfile: ./docker/Dockerfile.Inbound
-    command: sh -c "/opt/inbound-thirdparty-scheme-adapter/wait4/wait4.js inbound-thirdparty-scheme-adapter && npm run start:inbound"
+    command: sh -c "/opt/image-watcher/wait4/wait4.js image-watcher && npm run start:inbound"
     volumes:
-      - ./docker/wait4:/opt/inbound-thirdparty-scheme-adapter/wait4
+      - ./docker/wait4:/opt/image-watcher/wait4
     environment:
-      - NODE_ENV=test
+      # - NODE_ENV=test
     networks:
       - mojaloop-net
     ports:
-      - "4005:4005"
+      - "4006:4006"
     depends_on:
       - redis
     extra_hosts:
       - "redis:172.17.0.1"
     healthcheck:
-      test: wget -q http://172.17.0.1:4005/health -O /dev/null || exit 1
+      test: wget -q http://172.17.0.1:4006/health -O /dev/null || exit 1
       timeout: 3s
       retries: 10
       start_period: 10s
