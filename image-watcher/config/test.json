@@ -14,5 +14,6 @@
   "IMAGES": [
     "mojaloop/central-ledger",
     "mojaloop/ml-api-adapter"
-  ]
+  ],
+  "SCRAPE_TIME_MS": 30000
 }

@@ -64,7 +64,6 @@
     "@types/redis": "^2.8.25",
     "ajv": "^6.12.4",
     "ajv-keywords": "^3.5.2",
-    "axios": "^0.20.0",
     "blipp": "^4.0.1",
     "commander": "^6.0.0",
     "convict": "^6.0.0",

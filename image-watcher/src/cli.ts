@@ -41,7 +41,6 @@ import { RegistryClientConfig, RegistryClient } from './shared/registryClient'
 import ImageCalculator from './domain/imageCalculator'
 
 
-
 // handle script parameters
 const program = new Command(PACKAGE.name)
 /**
