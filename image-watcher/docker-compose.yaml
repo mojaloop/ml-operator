@@ -1,0 +1,38 @@
+version: "3.7"
+
+networks:
+  mojaloop-net:
+    name: mojaloop-net
+
+services:
+  image-watcher:
+    image: mojaloop/image-watcher:local
+    container_name: image-watcher
+    build:
+      context: ./
+    command: sh -c "/opt/image-watcher/wait4/wait4.js image-watcher && npm run start"
+    volumes:
+      - ./docker/wait4:/opt/image-watcher/wait4
+    networks:
+      - mojaloop-net
+    ports:
+      - "4006:4006"
+    depends_on:
+      - redis
+    extra_hosts:
+      - "redis:172.17.0.1"
+    healthcheck:
+      test: wget -q http://172.17.0.1:4006/health -O /dev/null || exit 1
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+      interval: 30s
+
+  redis:
+    container_name: redis
+    image: "redis:5.0.4-alpine"
+    networks:
+      - mojaloop-net
+    ports:
+      - "6379:6379"
+    restart: always
