@@ -39,6 +39,10 @@ export default class DeploymentWatcher {
 
   // returns null if there is no upgrade available
   public async _getDesiredVersionForImageSpecs(imageSpecs: Array<ImageSpec>): Promise<null | ImageSpec> {
+    if (imageSpecs.length === 0) {
+      return null;
+    }
+    
     //todo: only search for the highest version in the list of images
     const highestImage = imageSpecs[0]
     const upgradeResult = await this.imageWatcherClient.getLatestImage(highestImage, this.strategy)

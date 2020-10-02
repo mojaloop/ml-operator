@@ -14,6 +14,7 @@ export interface ServiceConfig {
   CHECK_FOR_UPDATE_CRON: string,
   SLACK_WEBHOOK_URL: string,
   IMAGE_WATCHER_CLIENT_URL: string,
+  SHOULD_USE_DEFAULT_K8S: boolean,
 }
 
 // Declare configuration schema, default values and bindings to environment variables
@@ -42,14 +43,17 @@ export const ConvictConfig = Convict<ServiceConfig>({
   SLACK_WEBHOOK_URL: {
     doc: 'The url of the slack webhook used to inform users about upgrades',
     default: 'localhost:4000',
-    format: 'url',
     env: 'SLACK_WEBHOOK_URL'
   },
   IMAGE_WATCHER_CLIENT_URL: {
     doc: 'The url of the image watcher service',
-    format: 'url',
     default: 'localhost:4006',
     env: 'IMAGE_WATCHER_CLIENT_URL'
+  },
+  SHOULD_USE_DEFAULT_K8S: {
+    doc: 'Set to `true` if running locally, or `false` if running on the cluster. If true, then will use the default k8s config',
+    default: false,
+    env: 'SHOULD_USE_DEFAULT_K8S'
   }
 })
 
@@ -68,6 +72,7 @@ const config: ServiceConfig = {
   CHECK_FOR_UPDATE_CRON: ConvictConfig.get('CHECK_FOR_UPDATE_CRON'),
   SLACK_WEBHOOK_URL: ConvictConfig.get('SLACK_WEBHOOK_URL'),
   IMAGE_WATCHER_CLIENT_URL: ConvictConfig.get('IMAGE_WATCHER_CLIENT_URL'),
+  SHOULD_USE_DEFAULT_K8S: ConvictConfig.get('SHOULD_USE_DEFAULT_K8S'),
 }
 
 export default config
