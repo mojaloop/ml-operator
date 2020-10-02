@@ -5,14 +5,6 @@
   "repository": "https://github.com/mojaloop/ml-operator",
   "author": "Matt de Haast <matt.dehaast@coil.com>",
   "license": "MIT",
-  "dependencies": {
-    "@koa/router": "^9.3.1",
-    "@kubernetes/client-node": "^0.12.0",
-    "cron": "^1.8.2",
-    "got": "^11.5.1",
-    "koa": "^2.13.0",
-    "semver": "^7.3.2"
-  },
   "scripts": {
     "audit:resolve": "SHELL=sh resolve-audit",
     "audit:check": "SHELL=sh check-audit",
@@ -33,6 +25,17 @@
     "updates:check": "npm-check-updates",
     "updates:update": "npm-check-updates -u && npm install",
     "watch": "tsc -w"
+  },
+  "dependencies": {
+    "@koa/router": "^9.3.1",
+    "@kubernetes/client-node": "^0.12.0",
+    "@mojaloop/central-services-error-handling": "^10.6.0",
+    "@mojaloop/central-services-health": "^10.6.0",
+    "@mojaloop/central-services-logger": "^10.6.0",
+    "cron": "^1.8.2",
+    "got": "^11.5.1",
+    "koa": "^2.13.0",
+    "semver": "^7.3.2"
   },
   "devDependencies": {
     "@types/cron": "^1.7.2",

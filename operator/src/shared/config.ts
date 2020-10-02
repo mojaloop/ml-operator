@@ -2,7 +2,6 @@
 // https://github.com/mozilla/node-convict
 import Convict from 'convict'
 import PACKAGE from '../../package.json'
-import fs, { PathLike } from 'fs'
 import { UpgradeStrategy } from '../domain/types'
 
 export { PACKAGE }
@@ -32,7 +31,7 @@ export const ConvictConfig = Convict<ServiceConfig>({
   },
   UPGRADE_STRATEGY: {
     doc: 'The upgrade strategy for the deployments with outdated images',
-    default: 'BUGFIX',
+    default: UpgradeStrategy.BUGFIX,
     env: 'UPGRADE_STRATEGY'
   },
   CHECK_FOR_UPDATE_CRON: {
@@ -42,6 +41,7 @@ export const ConvictConfig = Convict<ServiceConfig>({
   },
   SLACK_WEBHOOK_URL: {
     doc: 'The url of the slack webhook used to inform users about upgrades',
+    default: 'localhost:4000',
     format: 'url',
     env: 'SLACK_WEBHOOK_URL'
   },

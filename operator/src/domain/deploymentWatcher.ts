@@ -1,3 +1,5 @@
+import k8s from '@kubernetes/client-node'
+
 import { ImageSpec, UpgradeStrategy } from "./types";
 import { ImageWatcherClient } from '../shared/imageWatcherClient'
 
@@ -6,12 +8,12 @@ import { ImageWatcherClient } from '../shared/imageWatcherClient'
  * @description Watches a single service/deployment and checks if the image(s) are require an update
  */
 export default class DeploymentWatcher {
-  private k8sClient: unknown;
+  private k8sClient: k8s.AppsV1Api;
   private serviceToWatch: string;
   private imageWatcherClient: ImageWatcherClient;
   private strategy: UpgradeStrategy;
 
-  constructor(k8sClient: unknown, serviceToWatch: string, imageWatcherClient: ImageWatcherClient, strategy: UpgradeStrategy) {
+  constructor(k8sClient: k8s.AppsV1Api, serviceToWatch: string, imageWatcherClient: ImageWatcherClient, strategy: UpgradeStrategy) {
     this.k8sClient = k8sClient
     this.serviceToWatch = serviceToWatch
     this.imageWatcherClient = imageWatcherClient
@@ -24,11 +26,13 @@ export default class DeploymentWatcher {
   }
 
   public async _getCurrentImageSpecsForDeployment(): Promise<Array<ImageSpec>> {
-    const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(null, null, null, `app.kubernetes.io/name == ${this.serviceToWatch}`)
+    const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(false, undefined, undefined, `app.kubernetes.io/name == ${this.serviceToWatch}`)
     const deploymentList = deploymentsResult.body.items
-    const images = deploymentList.items.map(item => item.spec.template.spec.containers[0].image)
+    // TODO: filter out the undefined
+    const images = deploymentList.map(item => item?.spec?.template?.spec?.containers[0].image)
 
     //TODO: map to an image spec
+    console.log("got current images", images)
 
     return []
   }
