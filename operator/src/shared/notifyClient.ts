@@ -13,19 +13,19 @@ export class SlackNotifyClient implements NotifyClient {
     this.webhook = webhook
   }
 
-  public async notifyOperator(_services: Array<ImageSpec>): Promise<void> {
-    if (_services.length < 1) {
-      Logger.warn('SlackNotifyClient.notifyOperator - no images to notify. Skipping sending notification.')
-      return;
+  public async notifyOperator(services: Array<ImageSpec>): Promise<void> {
+    Logger.info('SlackNotifyClient.notifyOperator - sending slack notification')
+    let textLines = [ '*ml-operator* - all monitored services are up to date']
+    if (services.length > 0) {      
+      // TODO: convert these into a copy/pastable helm script
+      textLines = ['*ml-operator* - The following services are not on the latest secure version and should be updated:']
+      services.forEach(service => {
+        textLines.push(`  - \`${service.orgId}/${service.imageName}\`: latest version is \`${service.tag}\``)
+      })
     }
 
-    //TODO: build the text
-    const text = `\`service is not on the latest secure version. Please update urgently to latest_tag}!`
-    got.post(this.webhook, {
-      json: {
-        text
-      }
-    })
+    const text = textLines.join('\n')
+    got.post(this.webhook, { json: { text } })
   }
 
 }

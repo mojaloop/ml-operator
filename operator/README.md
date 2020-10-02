@@ -9,6 +9,6 @@ cd ../image-watcher
 docker-compose up -d redis
 npm run start
 
-export SLACK_WEBHOOK_URL=<insert_webhook_url>
+export SLACK_WEBHOOK_URL=https://hooks.slack.com/services/****/***
 npm run start
 ```

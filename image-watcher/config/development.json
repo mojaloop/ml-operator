@@ -12,6 +12,7 @@
     "COLOR": true
   },
   "IMAGES": [
+    "mojaloop/account-lookup-service",
     "mojaloop/central-ledger",
     "mojaloop/ml-api-adapter"
   ],

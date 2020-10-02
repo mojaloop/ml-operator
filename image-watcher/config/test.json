@@ -15,5 +15,5 @@
     "mojaloop/central-ledger",
     "mojaloop/ml-api-adapter"
   ],
-  "SCRAPE_TIME_MS": 30000
+  "SCRAPE_TIME_MS": 120000
 }
