@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="1" failures="0" time="9.639">
+  <testsuite name="deploymentWatcher" errors="0" failures="0" skipped="0" timestamp="2020-10-02T05:20:12" time="9.433" tests="1">
+    <testcase classname="deploymentWatcher _getDesiredVersionForImageSpecs gets the current image specs" name="deploymentWatcher _getDesiredVersionForImageSpecs gets the current image specs" time="1.099">
+    </testcase>
+  </testsuite>
+</testsuites>

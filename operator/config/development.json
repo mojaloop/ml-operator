@@ -1,6 +1,13 @@
 {
   "SERVICES": [
-    "centralledger-service"
+    "accountlookupservice",
+    "authservice",
+    "centralledger",
+    "mlapiadapter",
+    "nginx-ingress-nginx-controller",
+    "quotingservice",
+    "thirdpartyapiadapter",
+    "transactionrequestsservice"
   ],
   "UPGRADE_STRATEGY": "BUGFIX",
   "CHECK_FOR_UPDATE_CRON": "0 * * * * *",

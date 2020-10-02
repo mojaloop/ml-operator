@@ -20,8 +20,8 @@
     "test": "npm run test:unit",
     "test:coverage": "jest --coverage  --testMatch '**/test/unit/**/*.(test|spec).ts'",
     "test:coverage-check": "jest --coverage --testMatch '**/test/unit/**/*.(test|spec).ts'",
-    "test:integration": "jest --config './jest.integration.config.js' --testMatch '**/test/integration/**/*.(test|spec).ts'",
-    "test:unit": "jest --testMatch '**/test/unit/**/*.(test|spec).ts'",
+    "test:integration": "jest --config './jest.integration.config.js' --testMatch '**/src/**/*.integration.ts'",
+    "test:unit": "jest --collect-coverage=false --testMatch '**/src/**/*.unit.ts'",
     "updates:check": "npm-check-updates",
     "updates:update": "npm-check-updates -u && npm install",
     "watch": "tsc -w"

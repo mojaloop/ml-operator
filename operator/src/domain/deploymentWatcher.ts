@@ -2,6 +2,7 @@ import k8s from '@kubernetes/client-node'
 
 import { ImageSpec, UpgradeStrategy } from "./types";
 import { ImageWatcherClient } from '../shared/imageWatcherClient'
+import { imageStringToSpec } from '~/shared/util';
 
 /**
  * @class DeploymentWatcher
@@ -26,15 +27,16 @@ export default class DeploymentWatcher {
   }
 
   public async _getCurrentImageSpecsForDeployment(): Promise<Array<ImageSpec>> {
+    // TODO: make this label configurable
     const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(false, undefined, undefined, `app.kubernetes.io/name == ${this.serviceToWatch}`)
     const deploymentList = deploymentsResult.body.items
-    // TODO: filter out the undefined
-    const images = deploymentList.map(item => item?.spec?.template?.spec?.containers[0].image)
 
-    //TODO: map to an image spec
-    console.log("got current images", images)
-
-    return []
+    const images = deploymentList
+      .map(item => item?.spec?.template?.spec?.containers[0].image)
+      .filter(i => i !== undefined) as string[]
+    const imageSpecs = images.map(i => imageStringToSpec(i))
+    
+    return imageSpecs
   }
 
   // returns null if there is no upgrade available
