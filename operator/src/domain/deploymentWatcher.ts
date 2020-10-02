@@ -9,8 +9,8 @@ import { imageStringToSpec } from '~/shared/util';
  * @description Watches a single service/deployment and checks if the image(s) are require an update
  */
 export default class DeploymentWatcher {
+  public serviceToWatch: string;
   private k8sClient: k8s.AppsV1Api;
-  private serviceToWatch: string;
   private imageWatcherClient: ImageWatcherClient;
   private strategy: UpgradeStrategy;
 

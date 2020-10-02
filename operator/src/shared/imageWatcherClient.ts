@@ -32,7 +32,8 @@ export class ImageWatcherClient {
       const result: Response<ImageWatcherResponse> = await got.get(url, { responseType: 'json' })
       return imageStringToSpec(result.body.fullImage)
     } catch (err) {
-      Logger.error(`ImageWatcherClient.getLatestImage() failed with error: ${util.inspect(err)}`)
+      Logger.error(`ImageWatcherClient.getLatestImage() failed with error: ${err}`)
+      Logger.debug(`full error is: ${util.inspect(err)}`)
       throw err
     }
   }

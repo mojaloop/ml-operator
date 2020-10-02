@@ -14,7 +14,10 @@
   "IMAGES": [
     "mojaloop/account-lookup-service",
     "mojaloop/central-ledger",
-    "mojaloop/ml-api-adapter"
+    "mojaloop/ml-api-adapter",
+    "mojaloop/auth-service",
+    "mojaloop/transaction-requests-service",
+    "mojaloop/quoting-service"
   ],
   "SCRAPE_TIME_MS": 30000
 }

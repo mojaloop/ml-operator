@@ -1,4 +1,4 @@
-// import { CronJob } from 'cron'
+import { CronJob } from 'cron'
 import { KubeConfig, AppsV1Api }from '@kubernetes/client-node'
 import Logger from '@mojaloop/central-services-logger'
 
@@ -24,12 +24,13 @@ async function main() {
   const servicesAndStrategies = config.SERVICES.map(service => ({service, strategy: config.UPGRADE_STRATEGY}))
 
   const clusterWatcher = new ClusterWatcher(k8sApi, imageWatcherClient, slackNotifyClient, servicesAndStrategies)
+  // Run on start - so we don't need to wait for the cron
   clusterWatcher.getLatestAndNotify()
 
-  // const cronCommand = () => clusterWatcher.getLatestAndNotify()
-  // const job = new CronJob(config.CHECK_FOR_UPDATE_CRON, cronCommand, null, true);
+  const cronCommand = () => clusterWatcher.getLatestAndNotify()
+  const job = new CronJob(config.CHECK_FOR_UPDATE_CRON, cronCommand, null, true);
 
-  // job.start();
+  job.start();
 }
 
 main()

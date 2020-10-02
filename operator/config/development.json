@@ -3,10 +3,8 @@
     "accountlookupservice",
     "authservice",
     "centralledger",
-    "mlapiadapter",
     "nginx-ingress-nginx-controller",
     "quotingservice",
-    "thirdpartyapiadapter",
     "transactionrequestsservice"
   ],
   "UPGRADE_STRATEGY": "BUGFIX",

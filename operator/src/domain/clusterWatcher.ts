@@ -40,7 +40,15 @@ export class ClusterWatcher {
   public async getLatestAndNotify(): Promise<void> {
     Logger.info(`ClusterWatcher.getLatestAndNotify() - checking ${this.servicesAndStrategies.length} deployments for outdated images`)
 
-    const results = await Promise.all(this.deploymentWatchers.map(async w => await w.getDesiredVersionOrNull()))
+    // TODO: instead of ignoring failures, add to a list so we can notify the user
+    const results = await Promise.all(this.deploymentWatchers.map(async w => {
+      try {
+        return await w.getDesiredVersionOrNull()
+      } catch (err) {
+        Logger.error(`ClusterWatcher.getLatestAndNotify() - failing silently for: ${w.serviceToWatch}`)
+        return undefined;
+      }
+    }))
     const filteredResults: Array<ImageSpec> = []
     // for some reason, TSLint isn't figuring out the filter properly
     // so let's be explicit
