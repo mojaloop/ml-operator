@@ -3,16 +3,16 @@ A Kubernetes operator for Mojaloop
 
 ## Scope:
 
-To begin with, the Mojaloop-Operator handles only 1 feature: To alert operators about available security patches.
+To begin with, the Mojaloop-Operator handles only one feature: Alert Switch/Hub Operators about available security patches.
 
 ## Background
 A Mojaloop Helm release uses specific versions of core and supporting services that make up the Mojaloop Hub. Typically this is then enriched with enhancements, more services by implementers with custom config and additional security mechanisms.
 
-With the versioning convention Mojaloop uses, a Docker image has a version for every service with a version `x.y.z`. For example, the `mojaloop/quoting-service` service has an image on DockerHub with version `v10.4.0`. However, once this is published, there may be enhancements to functionality and there will be subsequent releases such as `v10.4.1` or `v10.5.0` or `v10.6.0`, etc.
+With the versioning convention Mojaloop uses, a Docker image has a version for every service with a version `x.y.z`. For example, the `mojaloop/quoting-service` service has an image on DockerHub with version `v10.4.0`. However, once this is published, there may be enhancements to functionality and there will be subsequent releases such as `v10.5.0` or `v10.6.0` or `v11.0.0`, etc.
 
-However, if there is a security vulnerability identified in an already published image, say `v10.4.0`. A patched version of this image with just an upgraded version of that particular dependency or package to address the vulnerability is then released as an image with tag `v10.4.0.1-patch`. Subsequent patched versions of this same image without change functionality will continue incrementing the `p` variable in the `x.y.z.p-patch` version. 
+However, if there is a security vulnerability identified in an already published image or a fix, say `v10.4.0`. A patched version of this image with just an upgraded version of that particular dependency or package to address the vulnerability is then released as an image with tag `v10.4.1`. Subsequent patched versions of this same image without change functionality will continue incrementing the `z` variable in the `x.y.z` version. 
 
-This way, for a given image with specific functionality, images containing patches for vulnerabilities identified can be maintained. One other advantage of this method is that images are never overwritten, so in case there are issues even with patched versions, rollbacks can be performed easily without disrupting functionality and other implementers.
+This way, for a given image with specific functionality, images containing patches for vulnerabilities identified or fixes can be maintained. One other advantage of this method is that images are never overwritten, so in case there are issues even with patched versions, rollbacks can be performed easily without disrupting functionality and other implementers. This simplifies the process as well.
 
 ### Pactched images and notifications
 
