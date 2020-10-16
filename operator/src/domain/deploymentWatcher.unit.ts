@@ -13,10 +13,7 @@ jest.mock('@kubernetes/client-node')
 const mockImageWatcher = new ImageWatcherClient('localhost:4000')
 
 describe('deploymentWatcher', () => {
-  beforeEach(() => {
-    // jest.resetAllMocks();
-    jest.restoreAllMocks()
-  })
+  beforeEach(() => jest.restoreAllMocks())
 
   describe('constructor', () => {
     it('is well constructed', () => {

@@ -31,6 +31,7 @@ export default class DeploymentWatcher {
     const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(false, undefined, undefined, `app.kubernetes.io/name == ${this.serviceToWatch}`)
     const deploymentList = deploymentsResult.body.items
 
+    /* istanbul ignore next */
     const images = deploymentList
       .map(item => item?.spec?.template?.spec?.containers[0].image)
       .filter(i => i !== undefined) as string[]
