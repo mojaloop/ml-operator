@@ -6,6 +6,7 @@ A Kubernetes operator for Mojaloop
 To begin with, the Mojaloop-Operator handles only 1 feature: To alert operators about available security patches.
 
 ## Background
+
 A Mojaloop Helm release uses specific versions of core and supporting services that make up the Mojaloop Hub. Typically this is then enriched with enhancements, more services by implementers with custom config and additional security mechanisms.
 
 With the versioning convention Mojaloop uses, a Docker image has a version for every service with a version `x.y.z`. For example, the `mojaloop/quoting-service` service has an image on DockerHub with version `v10.4.0`. However, once this is published, there may be enhancements to functionality and there will be subsequent releases such as `v10.4.1` or `v10.5.0` or `v10.6.0`, etc.

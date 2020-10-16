@@ -6,7 +6,12 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   collectCoverage: true,
-  collectCoverageFrom: ['./src/**/*.ts'],
+  // Only checking coverage of domain for now
+  collectCoverageFrom: [
+    './src/domain/*.ts',
+    '!src/**/*.unit.ts',
+    '!src/**/*.integration.ts',
+  ],
   coverageReporters: ['json', 'lcov', 'text'],
   clearMocks: true,
   coverageThreshold: {

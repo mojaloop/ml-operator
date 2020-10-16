@@ -35,7 +35,7 @@ export default class DeploymentWatcher {
       .map(item => item?.spec?.template?.spec?.containers[0].image)
       .filter(i => i !== undefined) as string[]
     const imageSpecs = images.map(i => imageStringToSpec(i))
-    
+
     return imageSpecs
   }
 
@@ -44,12 +44,12 @@ export default class DeploymentWatcher {
     if (imageSpecs.length === 0) {
       return null;
     }
-    
-    //todo: only search for the highest version in the list of images
+
+    // todo: only search for the highest version in the list of images
+    // at the moment, this is a random list of image specs inside a given deployment
     const highestImage = imageSpecs[0]
     const upgradeResult = await this.imageWatcherClient.getLatestImage(highestImage, this.strategy)
-    // TODO: double check this equality
-    if (upgradeResult ===  highestImage) {
+    if (upgradeResult.tag ===  highestImage.tag) {
       // They are the same, no desired image change
       return null;
     }

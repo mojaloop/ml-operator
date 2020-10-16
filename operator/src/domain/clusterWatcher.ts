@@ -49,15 +49,9 @@ export class ClusterWatcher {
         return undefined;
       }
     }))
-    const filteredResults: Array<ImageSpec> = []
-    // for some reason, TSLint isn't figuring out the filter properly
-    // so let's be explicit
-    results.forEach(r => {
-      if (r) {
-        filteredResults.push(r)
-      }
-    })
 
-    this.notifyClient.notifyOperator(filteredResults)
+    // cast here since TS can't figure out types after a .filter
+    const filteredResults: Array<ImageSpec> = results.filter(r => r) as Array<ImageSpec>
+    return this.notifyClient.notifyOperator(filteredResults)
   }
 }

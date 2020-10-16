@@ -1,4 +1,3 @@
-
 import { AppsV1Api, KubeConfig } from "@kubernetes/client-node";
 import DeploymentWatcher from './deploymentWatcher';
 import { ImageWatcherClient } from '../shared/imageWatcherClient'
@@ -13,7 +12,7 @@ const k8sApi = kc.makeApiClient(AppsV1Api);
 const imageWatcherClient = new ImageWatcherClient('localhost:4000')
 
 describe('deploymentWatcher', () => {
-  
+
   describe('_getDesiredVersionForImageSpecs', () => {
     // Temporary test to verify that labels are working as expected
     it('gets the current image specs', async () => {
@@ -23,7 +22,7 @@ describe('deploymentWatcher', () => {
 
       // Act
       const result = await deploymentWatcher._getCurrentImageSpecsForDeployment()
-      
+
       // Assert
       expect(result.length).toBeGreaterThan(0)
     })

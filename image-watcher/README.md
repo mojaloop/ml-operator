@@ -8,10 +8,10 @@ Image-Watcher (name TBD) is a standalone ml-operator service which watches docke
 docker-compose up -d redis
 npm run start
 
-curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=major"| jq
-curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=minor"| jq
-curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=bugfix"| jq
-curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=patch"| jq
+curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=major" | jq
+curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=minor" | jq
+curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=bugfix" | jq
+curl -s "localhost:4006/images/mojaloop/central-ledger/v8.8.0-snapshot?strategy=patch" | jq
 ```
 
 ## Running with Docker-Compose
