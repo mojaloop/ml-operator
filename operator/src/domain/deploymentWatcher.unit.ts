@@ -1,4 +1,5 @@
 import { AppsV1Api, V1DeploymentList } from '@kubernetes/client-node'
+import { listDeploymentForAllNamespacesResult } from './__mock__/data'
 import { IncomingMessage } from 'http';
 
 import { ImageWatcherClient } from '../shared/imageWatcherClient'
@@ -28,6 +29,33 @@ describe('deploymentWatcher', () => {
       expect(dw['imageWatcherClient']).toBeDefined()
       expect(dw['strategy']).toStrictEqual(UpgradeStrategy.BUGFIX)
     })
+  })
+
+  describe('getPatchMessageMetadata', () => {
+    it('gets the patch message(s) for the deployment', async () => {
+      // Arrange
+      const dw = new DeploymentWatcher(new AppsV1Api(), 'mojaloop/account-lookup-service', mockImageWatcher, UpgradeStrategy.BUGFIX)
+      const listDeploymentsSpy = jest.spyOn(AppsV1Api.prototype, 'listDeploymentForAllNamespaces').mockResolvedValueOnce(listDeploymentForAllNamespacesResult)
+      const newImage = {
+        orgId: 'mojaloop',
+        imageName: 'account-lookup-service',
+        tag: 'v11.0.1',
+      }
+      const expected = [
+        `kubectl patch deployment account-lookup-service --patch '{"spec": {"template": {"spec": {"containers": [{"name":"account-lookup-service","image":"mojaloop/account-lookup-service:v11.0.1"}]}}}}'`
+      ]
+
+      // Act
+      const result = await dw.getPatchMessageMetadata(newImage)
+
+      // Assert
+      console.log('result', result)
+      expect(listDeploymentsSpy).toHaveBeenCalledTimes(1)
+      expect(result).toStrictEqual(expected)
+    })
+
+    it.todo('ignores containers with mismatched names')
+    it.todo('throws an error if the image tags are identical')
   })
 
   describe('getDesiredVersionOrNull', () => {

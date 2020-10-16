@@ -1,8 +1,8 @@
-import k8s from '@kubernetes/client-node'
+import k8s  from '@kubernetes/client-node'
 
 import { ImageSpec, UpgradeStrategy } from "./types";
 import { ImageWatcherClient } from '../shared/imageWatcherClient'
-import { imageStringToSpec } from '~/shared/util';
+import { imageSpecToString, imageStringToSpec } from '~/shared/util';
 
 /**
  * @class DeploymentWatcher
@@ -26,24 +26,46 @@ export default class DeploymentWatcher {
     return this._getDesiredVersionForImageSpecs(currentImageSpecs)
   }
 
-
+  /**
+   * @function getPatchMessageMetadata
+   * @description For a given image, print out a patch JSON string to update the deployment to that image
+   * @param newImage: { ImageSpec } - the new image to patch the deployment to
+   * @returns Array<string> - A list of shell commands to run in order to patch deployment
+   */
   public async getPatchMessageMetadata(newImage: ImageSpec): Promise<Array<string>> {
-    // TODO: do another lookup on the kubectl, do some formatting, and return something like:
-    //
-    // kubectl patch deployment account-lookup-service \
-    //    --patch '{"spec": {"template": {"spec": {"containers": [{"name": "account-lookup-service", "image": "mojaloop/account-lookup-service:v10.3.1"}]}}}}'
+    // TODO: how do we handle deployments with multiple containers? I guess we just filter out for
+    // the relevant container?
 
+    // TODO Worry about simple case first, then on the bigger helm chart
     const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(false, undefined, undefined, `app.kubernetes.io/name == ${this.serviceToWatch}`)
     const deploymentList = deploymentsResult.body.items
 
-    const deploymentContainers = deploymentList.map(item => item?.spec?.template?.spec?.containers)
-    console.log('deploymentContainers', JSON.stringify(deploymentContainers))
+    const templates: Array<string> = deploymentList.map(deployment => {
+      const deploymentName = deployment.metadata?.name
+      // Iterate through the containers, and apply the updates to the relevant containers in the deployment
+      // 99% of the time, this will just be one container in the deployment that matches, but who knows?
+      const containersToApply = deployment.spec?.template.spec?.containers.filter(container => {
+        const currentSpec = imageStringToSpec(container.image!)
+        // skip images that are not relevant to what should be patched
+        if (newImage.imageName === currentSpec.imageName && newImage.orgId === currentSpec.orgId) {
+          // Throw an error - clearly something is wrong if we are trying to not upgrade
+          if (newImage.tag === currentSpec.tag) {
+            throw new Error('getPatchMessageMetadata, tried to generate a new patch message, but new image is not an upgrade')
+          }
+          return true
+        }
 
-    // Worry about simple case first, then on the bigger helm chart
+        return false
+      })
+      .map(container => ({name: container.name, image: imageSpecToString(newImage)}))
+      const patchSpec = `'{"spec": {"template": {"spec": {"containers": ${JSON.stringify(containersToApply)}}}}}'`
+
+      // e.g. kubectl patch deployment account-lookup-service --patch '{"spec": {"template": {"spec": {"containers": [{"name": "account-lookup-service", "image": "mojaloop/account-lookup-service:v10.3.1"}]}}}}'
+      return `kubectl patch deployment ${deploymentName} --patch ${patchSpec}`
+    })
 
 
-
-    return ['']
+    return templates
   }
 
   public async _getCurrentImageSpecsForDeployment(): Promise<Array<ImageSpec>> {

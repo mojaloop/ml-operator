@@ -17,3 +17,7 @@ export function imageStringToSpec(image: string): ImageSpec {
     tag: result[3],
   }
 }
+
+export function imageSpecToString(spec: ImageSpec): string {
+  return `${spec.orgId}/${spec.imageName}:${spec.tag}`
+}
