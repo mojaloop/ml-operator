@@ -52,6 +52,10 @@ export class ClusterWatcher {
 
     // cast here since TS can't figure out types after a .filter
     const filteredResults: Array<ImageSpec> = results.filter(r => r) as Array<ImageSpec>
+
+    // For our filtered results, if we have NOTIFY_KUBECTL_PATCH_INSTRUCTIONS=true, we should go back to the
+    // deployment watcher, and get some patch metadata
+
     return this.notifyClient.notifyOperator(filteredResults)
   }
 }

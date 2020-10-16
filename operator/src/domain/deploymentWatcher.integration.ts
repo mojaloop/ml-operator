@@ -17,7 +17,7 @@ describe('deploymentWatcher', () => {
     // Temporary test to verify that labels are working as expected
     it('gets the current image specs', async () => {
       // Arrange
-      const service = 'accountlookupservice'
+      const service = 'account-lookup-service'
       const deploymentWatcher = new DeploymentWatcher(k8sApi, service, imageWatcherClient, UpgradeStrategy.BUGFIX)
 
       // Act

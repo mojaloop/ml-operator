@@ -37,3 +37,22 @@ To make it easier for Hub Operators to (upgrade and) use these patched images fo
 
 - [ ] Automated patching (pull the new image and upgrade) - if approved by a Hub Operator / Tech Ops
 - [ ] Configurable upgrade windows (based on standard `cron` syntax)
+
+
+## The Slack upgrade notification
+
+For `v1.0` of the operator, instead of directly upgrading the running deployments, the operator simply gives you instructions on how to do so yourself. 
+
+Since every environment is unique, and the `helm values` files are also unique, it's hard to generate an updated `values.yml` file with the new image tags in an automated fashion. For this reason, we decided to output `kubectl patch` commands instead of `helm upgrade` commands with new `values.yml` files.
+
+
+Moreover, it's rather difficult for the ml-operator to load the values file dynamically from within the cluster
+
+
+Here's an example command to update the name of a container within a deployment:
+```bash
+kubectl patch deployment account-lookup-service --patch '{"spec": {"template": {"spec": {"containers": [{"name": "account-lookup-service", "image": "mojaloop/account-lookup-service:v10.3.1"}]}}}}'
+```
+
+
+

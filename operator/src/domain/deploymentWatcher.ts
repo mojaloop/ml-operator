@@ -26,10 +26,33 @@ export default class DeploymentWatcher {
     return this._getDesiredVersionForImageSpecs(currentImageSpecs)
   }
 
+
+  public async getPatchMessageMetadata(newImage: ImageSpec): Promise<Array<string>> {
+    // TODO: do another lookup on the kubectl, do some formatting, and return something like:
+    //
+    // kubectl patch deployment account-lookup-service \
+    //    --patch '{"spec": {"template": {"spec": {"containers": [{"name": "account-lookup-service", "image": "mojaloop/account-lookup-service:v10.3.1"}]}}}}'
+
+    const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(false, undefined, undefined, `app.kubernetes.io/name == ${this.serviceToWatch}`)
+    const deploymentList = deploymentsResult.body.items
+
+    const deploymentContainers = deploymentList.map(item => item?.spec?.template?.spec?.containers)
+    console.log('deploymentContainers', JSON.stringify(deploymentContainers))
+
+    // Worry about simple case first, then on the bigger helm chart
+
+
+
+    return ['']
+  }
+
   public async _getCurrentImageSpecsForDeployment(): Promise<Array<ImageSpec>> {
     // TODO: make this label configurable
     const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(false, undefined, undefined, `app.kubernetes.io/name == ${this.serviceToWatch}`)
     const deploymentList = deploymentsResult.body.items
+
+    const deploymentContainers = deploymentList.map(item => item?.spec?.template?.spec?.containers)
+    console.log('deploymentContainers', JSON.stringify(deploymentContainers))
 
     /* istanbul ignore next */
     const images = deploymentList
