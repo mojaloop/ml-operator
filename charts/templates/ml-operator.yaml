@@ -21,18 +21,21 @@ spec:
     spec:
       containers:
         - name: ml-operator
-          image: mojaloop/ml-operator:v0.1.1
+          image: mojaloop/ml-operator:v0.1.2
+          # command: [ "tail", "-f", "/dev/null" ]
           volumeMounts:
             - name: ml-operator-config-volume
               mountPath: /opt/ml-operator/config
           env:
-            - name: ENV
+            - name: NODE_ENV
               value: production
+            - name: LOG_LEVEL
+              value: debug
             - name: SLACK_WEBHOOK_URL
-                valueFrom:
-                  secretKeyRef:
-                    name: ml-operator-secrets
-                    key: SLACK_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ml-operator-secrets
+                  key: SLACK_WEBHOOK_URL
       volumes:
         - name: ml-operator-config-volume
           configMap:
