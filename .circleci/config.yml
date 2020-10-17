@@ -509,16 +509,16 @@ workflows:
       #       tags:
       #         only: /.*/
 
-      - license-scan:
-          context: org-global
-          requires:
-            - build-local
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              only:
-                - master
+      # - license-scan:
+      #     context: org-global
+      #     requires:
+      #       - build-local
+      #     filters:
+      #       tags:
+      #         only: /.*/
+      #       branches:
+      #         only:
+      #           - master
 
       # - image-scan:
       #     context: org-global
@@ -543,7 +543,7 @@ workflows:
             # - linting-check
             - vulnerability-check
             # - image-scan
-            - license-scan
+            # - license-scan
           filters:
             branches:
               only:
@@ -563,7 +563,7 @@ workflows:
       - publish:
           context: org-global
           requires:
-            - license-scan
+            # - license-scan
             # - image-scan
             - test-unit
             - test-coverage
