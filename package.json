@@ -1,6 +1,6 @@
 {
   "name": "ml-operator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "index.ts",
   "repository": "https://github.com/mojaloop/ml-operator",
   "author": "Matt de Haast <matt.dehaast@coil.com>",
