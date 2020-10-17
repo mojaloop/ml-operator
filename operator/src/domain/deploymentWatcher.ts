@@ -40,6 +40,10 @@ export default class DeploymentWatcher {
     const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(false, undefined, undefined, `app.kubernetes.io/name == ${this.serviceToWatch}`)
     const deploymentList = deploymentsResult.body.items
 
+    if (deploymentList.length === 0) {
+      throw new Error(`getPatchMessageMetadata could not find deployment for label: 'app.kubernetes.io/name == ${ this.serviceToWatch }'`)
+    }
+
     const templates: Array<string> = deploymentList.map(deployment => {
       const deploymentName = deployment.metadata?.name
       // Iterate through the containers, and apply the updates to the relevant containers in the deployment
@@ -72,9 +76,6 @@ export default class DeploymentWatcher {
     // TODO: make this label configurable
     const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(false, undefined, undefined, `app.kubernetes.io/name == ${this.serviceToWatch}`)
     const deploymentList = deploymentsResult.body.items
-
-    const deploymentContainers = deploymentList.map(item => item?.spec?.template?.spec?.containers)
-    console.log('deploymentContainers', JSON.stringify(deploymentContainers))
 
     /* istanbul ignore next */
     const images = deploymentList

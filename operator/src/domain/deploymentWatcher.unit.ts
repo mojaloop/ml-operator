@@ -49,13 +49,73 @@ describe('deploymentWatcher', () => {
       const result = await dw.getPatchMessageMetadata(newImage)
 
       // Assert
-      console.log('result', result)
       expect(listDeploymentsSpy).toHaveBeenCalledTimes(1)
       expect(result).toStrictEqual(expected)
     })
 
-    it.todo('ignores containers with mismatched names')
-    it.todo('throws an error if the image tags are identical')
+    it('ignores containers with mismatched names', async () => {
+      // Arrange
+
+      // Add another container to this pod
+      const extraContainerResult = JSON.parse(JSON.stringify(listDeploymentForAllNamespacesResult))
+      extraContainerResult.body.items[0].spec.template.spec.containers.push({ image: 'mojaloop/central-ledger:v10.3.1' })
+      const listDeploymentsSpy = jest.spyOn(AppsV1Api.prototype, 'listDeploymentForAllNamespaces').mockResolvedValueOnce(extraContainerResult)
+
+      const dw = new DeploymentWatcher(new AppsV1Api(), 'mojaloop/account-lookup-service', mockImageWatcher, UpgradeStrategy.BUGFIX)
+      const newImage = {
+        orgId: 'mojaloop',
+        imageName: 'account-lookup-service',
+        tag: 'v11.0.1',
+      }
+      const expected = [
+        `kubectl patch deployment account-lookup-service --patch '{"spec": {"template": {"spec": {"containers": [{"name":"account-lookup-service","image":"mojaloop/account-lookup-service:v11.0.1"}]}}}}'`
+      ]
+
+      // Act
+      const result = await dw.getPatchMessageMetadata(newImage)
+
+      // Assert
+      expect(listDeploymentsSpy).toHaveBeenCalledTimes(1)
+      expect(result).toStrictEqual(expected)
+    })
+
+    it('throws an error if the image tags are identical', async () => {
+      // Arrange
+      const dw = new DeploymentWatcher(new AppsV1Api(), 'mojaloop/account-lookup-service', mockImageWatcher, UpgradeStrategy.BUGFIX)
+      const listDeploymentsSpy = jest.spyOn(AppsV1Api.prototype, 'listDeploymentForAllNamespaces').mockResolvedValueOnce(listDeploymentForAllNamespacesResult)
+      const newImage = {
+        orgId: 'mojaloop',
+        imageName: 'account-lookup-service',
+        tag: 'v10.3.1',
+      }
+
+      // Act
+      const action = async () => dw.getPatchMessageMetadata(newImage)
+
+      // Assert
+      await expect(action).rejects.toThrowError('getPatchMessageMetadata, tried to generate a new patch message')
+      expect(listDeploymentsSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('throws an error if deployment cannot be found', async () => {
+      // Arrange
+      const emptyResult = JSON.parse(JSON.stringify(listDeploymentForAllNamespacesResult))
+      emptyResult.body.items = []
+      const dw = new DeploymentWatcher(new AppsV1Api(), 'mojaloop/account-lookup-service', mockImageWatcher, UpgradeStrategy.BUGFIX)
+      const listDeploymentsSpy = jest.spyOn(AppsV1Api.prototype, 'listDeploymentForAllNamespaces').mockResolvedValueOnce(emptyResult)
+      const newImage = {
+        orgId: 'mojaloop',
+        imageName: 'account-lookup-service',
+        tag: 'v11.0.1',
+      }
+
+      // Act
+      const action = async () => dw.getPatchMessageMetadata(newImage)
+
+      // Assert
+      await expect(action).rejects.toThrowError('getPatchMessageMetadata could not find deployment')
+      expect(listDeploymentsSpy).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('getDesiredVersionOrNull', () => {
