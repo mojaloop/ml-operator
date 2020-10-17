@@ -1,4 +1,11 @@
 # Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)
+### [0.1.2](https://github.com/mojaloop/ml-operator/compare/v0.1.1...v0.1.2) (2020-10-17)
+
+
+### Bug Fixes
+
+* repo name to fix git tags ([7206078](https://github.com/mojaloop/ml-operator/commit/72060789de0304fa86404f83523d2d849d6924eb))
+
 ### 0.1.1 (2020-10-17)
 
 
