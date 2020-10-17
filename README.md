@@ -56,3 +56,17 @@ kubectl patch deployment account-lookup-service --patch '{"spec": {"template": {
 
 
 
+## Installing Charts from this repo:
+
+Helm charts are located in `./charts`
+
+```bash
+cp ./charts/.env.example ./charts/.env
+
+# fill in the .env file with the appropriate values
+
+# install the charts - if running the first time, it will create the secrets based on the .env file
+make install
+
+kubectl get po
+```
