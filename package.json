@@ -1,5 +1,5 @@
 {
-  "name": "ml-operator",
+  "name": "@mojaloop/ml-operator",
   "version": "0.1.1",
   "main": "index.ts",
   "repository": "https://github.com/mojaloop/ml-operator",
