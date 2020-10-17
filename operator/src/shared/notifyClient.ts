@@ -3,7 +3,7 @@ import got from 'got'
 import { ImageSpec } from '../domain/types';
 
 export interface NotifyClient {
-  notifyOperator(services: Array<ImageSpec>): Promise<void>
+  notifyOperator(services: Array<ImageSpec>, commands?: Array<string>): Promise<void>
 }
 
 export class SlackNotifyClient implements NotifyClient {
@@ -13,7 +13,7 @@ export class SlackNotifyClient implements NotifyClient {
     this.webhook = webhook
   }
 
-  public async notifyOperator(services: Array<ImageSpec>): Promise<void> {
+  public async notifyOperator(services: Array<ImageSpec>, commands?: Array<string>): Promise<void> {
     Logger.info('SlackNotifyClient.notifyOperator - sending slack notification')
     let textLines = [ '*ml-operator* - all monitored services are up to date']
     if (services.length > 0) {
@@ -22,6 +22,12 @@ export class SlackNotifyClient implements NotifyClient {
       services.forEach(service => {
         textLines.push(`  - \`${service.orgId}/${service.imageName}\`: latest version is \`${service.tag}\``)
       })
+
+      if (commands && commands.length > 0) {
+        textLines.push('Use the following commands to patch your deployments with `kubectl`:\n```\n')
+        commands.forEach(command => textLines.push(command))
+        textLines.push('```')
+      }
     }
 
     const text = textLines.join('\n')

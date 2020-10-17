@@ -1,5 +1,6 @@
 import k8s from '@kubernetes/client-node'
 import Logger from '@mojaloop/central-services-logger'
+import config from '~/shared/config';
 
 
 import { ImageWatcherClient } from "../shared/imageWatcherClient";
@@ -41,9 +42,20 @@ export class ClusterWatcher {
     Logger.info(`ClusterWatcher.getLatestAndNotify() - checking ${this.servicesAndStrategies.length} deployments for outdated images`)
 
     // TODO: instead of ignoring failures, add to a list so we can notify the user
+    const commands: Array<string | null> = []
     const results = await Promise.all(this.deploymentWatchers.map(async w => {
       try {
-        return await w.getDesiredVersionOrNull()
+        const desiredVersion = await w.getDesiredVersionOrNull()
+        if (!desiredVersion) {
+          commands.push(null)
+          return desiredVersion
+        }
+
+        if (config.NOTIFY_KUBECTL_PATCH_INSTRUCTIONS) {
+          const command = await Promise.all(this.deploymentWatchers.map(async w => w.getPatchMessageMetadata(desiredVersion)))
+          commands.push(command.join('\n'))
+        }
+        return desiredVersion
       } catch (err) {
         Logger.error(`ClusterWatcher.getLatestAndNotify() - failing silently for: ${w.serviceToWatch}`)
         return undefined;
@@ -53,8 +65,13 @@ export class ClusterWatcher {
     // cast here since TS can't figure out types after a .filter
     const filteredResults: Array<ImageSpec> = results.filter(r => r) as Array<ImageSpec>
 
-    // For our filtered results, if we have NOTIFY_KUBECTL_PATCH_INSTRUCTIONS=true, we should go back to the
+    // For our filtered results, if we have NOTIFY_KUBECTL_PATCH_INSTRUCTIONS=true, go back to the
     // deployment watcher, and get some patch metadata
+
+    if (config.NOTIFY_KUBECTL_PATCH_INSTRUCTIONS) {
+      const filteredCommands: Array<string> = commands.filter(c => c) as Array<string>
+      return this.notifyClient.notifyOperator(filteredResults, filteredCommands)
+    }
 
     return this.notifyClient.notifyOperator(filteredResults)
   }

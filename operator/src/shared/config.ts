@@ -15,6 +15,7 @@ export interface ServiceConfig {
   SLACK_WEBHOOK_URL: string,
   IMAGE_WATCHER_CLIENT_URL: string,
   SHOULD_USE_DEFAULT_K8S: boolean,
+  NOTIFY_KUBECTL_PATCH_INSTRUCTIONS: boolean,
 }
 
 // Declare configuration schema, default values and bindings to environment variables
@@ -54,6 +55,11 @@ export const ConvictConfig = Convict<ServiceConfig>({
     doc: 'Set to `true` if running locally, or `false` if running on the cluster. If true, then will use the default k8s config',
     default: false,
     env: 'SHOULD_USE_DEFAULT_K8S'
+  },
+  NOTIFY_KUBECTL_PATCH_INSTRUCTIONS: {
+    doc: 'Set to `true` you want the slack notification to include `kubectl patch` instructions to copy and paste',
+    default: true,
+    env: 'NOTIFY_KUBECTL_PATCH_INSTRUCTIONS'
   }
 })
 
@@ -73,6 +79,7 @@ const config: ServiceConfig = {
   SLACK_WEBHOOK_URL: ConvictConfig.get('SLACK_WEBHOOK_URL'),
   IMAGE_WATCHER_CLIENT_URL: ConvictConfig.get('IMAGE_WATCHER_CLIENT_URL'),
   SHOULD_USE_DEFAULT_K8S: ConvictConfig.get('SHOULD_USE_DEFAULT_K8S'),
+  NOTIFY_KUBECTL_PATCH_INSTRUCTIONS: ConvictConfig.get('NOTIFY_KUBECTL_PATCH_INSTRUCTIONS'),
 }
 
 export default config
