@@ -56,15 +56,16 @@ describe('ClusterWatcher', () => {
       }
       jest.spyOn(DeploymentWatcher.prototype, 'getDesiredVersionOrNull').mockResolvedValueOnce(null)
       jest.spyOn(DeploymentWatcher.prototype, 'getDesiredVersionOrNull').mockResolvedValueOnce(updatedImageSpec)
+      jest.spyOn(DeploymentWatcher.prototype, 'getPatchMessageMetadata').mockResolvedValueOnce(['some instructions'])
 
       // Act
       await clusterWatcher.getLatestAndNotify()
 
       // Assert
-      expect(mockNotifyClient.notifyOperator).toHaveBeenCalledWith([updatedImageSpec])
+      expect(mockNotifyClient.notifyOperator).toHaveBeenCalledWith([updatedImageSpec], ['some instructions'], [])
     })
 
-    it('fails silently when the DeploymentWatcher fails', async () => {
+    it('fails when the DeploymentWatcher fails', async () => {
       // Arrange
       // TODO: figure out how to mock properly
       const servicesAndStrategies = [
@@ -78,7 +79,7 @@ describe('ClusterWatcher', () => {
       await clusterWatcher.getLatestAndNotify()
 
       // Assert
-      expect(mockNotifyClient.notifyOperator).toHaveBeenCalledWith([])
+      expect(mockNotifyClient.notifyOperator).toHaveBeenCalledWith([], [], [new Error('test error'), new Error('test error')])
 
     })
   })
