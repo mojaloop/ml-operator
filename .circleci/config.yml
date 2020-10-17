@@ -449,13 +449,13 @@ workflows:
             tags:
               only: /.*/
 
-      - test-bdd:
-          context: org-global
-          requires:
-            - setup
-          filters:
-            tags:
-              only: /.*/
+      # - test-bdd:
+      #     context: org-global
+      #     requires:
+      #       - setup
+      #     filters:
+      #       tags:
+      #         only: /.*/
 
       - test-unit:
           context: org-global
@@ -501,13 +501,13 @@ workflows:
             tags:
               only: /.*/
 
-      - linting-check:
-          context: org-global
-          requires:
-            - setup
-          filters:
-            tags:
-              only: /.*/
+      # - linting-check:
+      #     context: org-global
+      #     requires:
+      #       - setup
+      #     filters:
+      #       tags:
+      #         only: /.*/
 
       - license-scan:
           context: org-global
@@ -538,9 +538,9 @@ workflows:
             - test-unit
             - test-coverage
             # - test-integration
-            - test-bdd
+            # - test-bdd
             - audit-licenses
-            - linting-check
+            # - linting-check
             - vulnerability-check
             # - image-scan
             - license-scan
