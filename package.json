@@ -13,7 +13,7 @@
     "docker:build": "docker build -t mojaloop/ml-operator:local .",
     "lint": "eslint ./src/**/*.ts *.js",
     "pretest": "echo \"pretest - TODO...\"",
-    "release": "standard-version",
+    "release": "standard-version --releaseCommitMessageFormat 'chore(release): {{currentTag}} [skip ci]'",
     "standard": "echo '\\033[1;33m  This project uses eslint instead of standard. Use `npm run lint` instead.'",
     "start": "ts-node --project ./tsconfig.json --files --require tsconfig-paths/register ./src/index.ts",
     "dev": "ts-node-dev --project ./tsconfig.json --files --require tsconfig-paths/register src/index.ts start",
