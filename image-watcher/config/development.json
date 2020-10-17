@@ -17,7 +17,8 @@
     "mojaloop/ml-api-adapter",
     "mojaloop/auth-service",
     "mojaloop/transaction-requests-service",
-    "mojaloop/quoting-service"
+    "mojaloop/quoting-service",
+    "mojaloop/thirdparty-api-adapter"
   ],
   "SCRAPE_TIME_MS": 30000
 }

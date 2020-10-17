@@ -41,38 +41,38 @@ export class ClusterWatcher {
   public async getLatestAndNotify(): Promise<void> {
     Logger.info(`ClusterWatcher.getLatestAndNotify() - checking ${this.servicesAndStrategies.length} deployments for outdated images`)
 
-    // TODO: instead of ignoring failures, add to a list so we can notify the user
+    const results: Array<ImageSpec | null> = []
     const commands: Array<string | null> = []
-    const results = await Promise.all(this.deploymentWatchers.map(async w => {
-      try {
-        const desiredVersion = await w.getDesiredVersionOrNull()
-        if (!desiredVersion) {
-          commands.push(null)
-          return desiredVersion
-        }
+    const failures: Array<Error> = []
 
+    await Promise.all(this.deploymentWatchers.map(async w => {
+      try {
+        const result = await w.getDesiredVersionOrNull()
+        results.push(result)
+
+        // make sure to grab command metadata if we need it
         if (config.NOTIFY_KUBECTL_PATCH_INSTRUCTIONS) {
-          const command = await Promise.all(this.deploymentWatchers.map(async w => w.getPatchMessageMetadata(desiredVersion)))
-          commands.push(command.join('\n'))
+          if (!result) {
+            //push nulls so that our 2 arrays line up
+            commands.push(null)
+          } else {
+            const command = await w.getPatchMessageMetadata(result)
+            commands.push(command.join('\n'))
+          }
         }
-        return desiredVersion
       } catch (err) {
-        Logger.error(`ClusterWatcher.getLatestAndNotify() - failing silently for: ${w.serviceToWatch}`)
-        return undefined;
+        Logger.error(`first ClusterWatcher.getLatestAndNotify() - failing for: ${w.serviceToWatch}`)
+        failures.push(err)
+        Logger.error(err)
       }
     }))
 
     // cast here since TS can't figure out types after a .filter
     const filteredResults: Array<ImageSpec> = results.filter(r => r) as Array<ImageSpec>
+    const filteredCommands: Array<string> = commands.filter(c => c) as Array<string>
 
     // For our filtered results, if we have NOTIFY_KUBECTL_PATCH_INSTRUCTIONS=true, go back to the
     // deployment watcher, and get some patch metadata
-
-    if (config.NOTIFY_KUBECTL_PATCH_INSTRUCTIONS) {
-      const filteredCommands: Array<string> = commands.filter(c => c) as Array<string>
-      return this.notifyClient.notifyOperator(filteredResults, filteredCommands)
-    }
-
-    return this.notifyClient.notifyOperator(filteredResults)
+    return this.notifyClient.notifyOperator(filteredResults, filteredCommands, failures)
   }
 }
