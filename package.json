@@ -4,7 +4,7 @@
   "main": "index.ts",
   "repository": "https://github.com/mojaloop/ml-operator",
   "author": "Matt de Haast <matt.dehaast@coil.com>",
-  "license": "MIT",
+  "license": "Apache 2.0",
   "scripts": {
     "audit:resolve": "SHELL=sh resolve-audit",
     "audit:check": "SHELL=sh check-audit",
