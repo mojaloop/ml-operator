@@ -1,4 +1,5 @@
 import k8s  from '@kubernetes/client-node'
+import util from 'util'
 
 import { ImageSpec, UpgradeStrategy } from "./types";
 import { ImageWatcherClient } from '../shared/imageWatcherClient'
@@ -91,7 +92,7 @@ export default class DeploymentWatcher {
       return imageSpecs
     } catch (err) {
       Logger.error(`DeploymentWatcher._getCurrentImageSpecsForDeployment - failed for service: ${this.serviceToWatch}'`)
-      Logger.error(err)
+      Logger.error(util.inspect(err))
       throw err
     }
   }

@@ -19,9 +19,13 @@ spec:
       labels:
         app: ml-operator
     spec:
+      # gives this pod super powers
+      serviceAccountName: ml-operator
       containers:
         - name: ml-operator
           image: mojaloop/ml-operator:v0.1.2
+          securityContext:
+            runAsUser: 0
           # command: [ "tail", "-f", "/dev/null" ]
           volumeMounts:
             - name: ml-operator-config-volume
@@ -29,7 +33,10 @@ spec:
           env:
             - name: NODE_ENV
               value: production
+              # this doesn't seem to work
             - name: LOG_LEVEL
+              value: debug
+            - name: CSL_LOG_LEVEL
               value: debug
             - name: SLACK_WEBHOOK_URL
               valueFrom:

@@ -23,6 +23,7 @@ export class ImageWatcherClient {
     const imageSpecToUrl = (spec: ImageSpec): string => {
       return `${spec.orgId}/${spec.imageName}/${spec.tag}`
     }
+    // TODO: this fails if the image-watcher isn't up yet - maybe we can implement some retries?
     Logger.info(`ImageWatcherClient.getLatestImage() - getting latest image: ${imageSpecToUrl(imageSpec)} with strategy: ${strategy}`)
     const url = `${this.baseUrl}/images/${imageSpecToUrl(imageSpec)}?strategy=${strategy.toLowerCase()}`
 
