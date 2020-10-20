@@ -1,4 +1,11 @@
 # Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)
+### [0.1.3](https://github.com/mojaloop/ml-operator/compare/v0.1.2...v0.1.3) (2020-10-20)
+
+
+### Features
+
+* **helm:** add helm example ([#5](https://github.com/mojaloop/ml-operator/issues/5)) ([a125041](https://github.com/mojaloop/ml-operator/commit/a1250413edcf41f08f44ce93e35ce8bba0769f48))
+
 ### [0.1.2](https://github.com/mojaloop/ml-operator/compare/v0.1.1...v0.1.2) (2020-10-17)
 
 
