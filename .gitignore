@@ -118,3 +118,7 @@ dist
 
 .idea
 junit.xml
+
+
+# make state files
+.add-secrets
