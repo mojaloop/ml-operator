@@ -454,15 +454,7 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - check-pr-title:
-          context: org-global
-          # only build PRs?
-          filters:
-            tags:
-              ignore: /.*/
-            # branches:
-            #   ignore:
-            #     - /.*/
+
 
       - build-local:
           context: org-global
@@ -476,13 +468,18 @@ workflows:
             tags:
               only: /.*/
 
-      # - test-bdd:
-      #     context: org-global
-      #     requires:
-      #       - setup
-      #     filters:
-      #       tags:
-      #         only: /.*/
+      - check-pr-title:
+          context: org-global
+          requires:
+            - setup
+          # only build PRs?
+          filters:
+            tags:
+              ignore: /.*/
+            # branches:
+            #   ignore:
+            #     - /.*/
+
 
       - test-unit:
           context: org-global
