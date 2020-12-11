@@ -6,8 +6,8 @@
   "author": "Matt de Haast <matt.dehaast@coil.com>",
   "license": "Apache 2.0",
   "scripts": {
-    "audit:resolve": "SHELL=sh resolve-audit",
-    "audit:check": "SHELL=sh check-audit",
+    "audit:resolve": "SHELL=sh resolve-audit --production",
+    "audit:check": "SHELL=sh check-audit --production",
     "build": "tsc && cp -R config dist",
     "build:api": "npm run build:api:inbound && npm run build:api:outbound",
     "docker:build": "docker build -t mojaloop/ml-operator:local .",
