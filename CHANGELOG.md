@@ -1,4 +1,11 @@
 # Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)
+### [0.1.4](https://github.com/mojaloop/ml-operator/compare/v0.1.3...v0.1.4) (2020-12-11)
+
+
+### Features
+
+* **ci/cd:** working on pr title check ([#7](https://github.com/mojaloop/ml-operator/issues/7)) ([6dd9f69](https://github.com/mojaloop/ml-operator/commit/6dd9f6974d48047f91d0882155c4a7e5389660fd))
+
 ### [0.1.3](https://github.com/mojaloop/ml-operator/compare/v0.1.2...v0.1.3) (2020-10-20)
 
 
