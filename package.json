@@ -6,8 +6,8 @@
   "author": "Matt de Haast <matt.dehaast@coil.com>",
   "license": "Apache 2.0",
   "scripts": {
-    "audit:resolve": "SHELL=sh resolve-audit",
-    "audit:check": "SHELL=sh check-audit",
+    "audit:resolve": "SHELL=sh resolve-audit --production",
+    "audit:check": "SHELL=sh check-audit --production",
     "build": "tsc && cp -R config dist",
     "build:api": "npm run build:api:inbound && npm run build:api:outbound",
     "docker:build": "docker build -t mojaloop/ml-operator:local .",
@@ -39,8 +39,14 @@
     "semver": "^7.3.2"
   },
   "devDependencies": {
-    "@types/cron": "^1.7.2",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@commitlint/format": "^11.0.0",
+    "@commitlint/lint": "^11.0.0",
+    "@commitlint/load": "^11.0.0",
+    "@octokit/rest": "^18.0.12",
     "@types/convict": "^5.2.1",
+    "@types/cron": "^1.7.2",
     "@types/hapi": "^18.0.3",
     "@types/hapi__hapi": "^19.0.4",
     "@types/hapi__inert": "^5.2.0",
