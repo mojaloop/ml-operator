@@ -86,6 +86,22 @@ jobs:
           paths:
             - node_modules
 
+  check-pr-title:
+    executor: default-docker
+    steps:
+      - run:
+          name: Install general dependencies
+          command: *defaults_Dependencies
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Check the PR title
+          command: |
+            echo "${CIRCLE_PULL_REQUESTS}"
+            echo "${CIRCLE_PULL_REQUEST}"
+
   test-unit:
     executor: default-docker
     steps:
@@ -437,6 +453,16 @@ workflows:
   version: 2
   build_and_test:
     jobs:
+      - check-pr-title:
+          context: org-global
+          # only build PRs?
+          filters:
+            tags:
+              ignore: /.*/
+            branches:
+              ignore:
+                - /.*/
+
       - build-local:
           context: org-global
           filters:
