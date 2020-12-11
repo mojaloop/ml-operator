@@ -101,6 +101,7 @@ jobs:
           command: |
             echo "${CIRCLE_PULL_REQUESTS}"
             echo "${CIRCLE_PULL_REQUEST}"
+            ./scripts/_pr_title.js
 
   test-unit:
     executor: default-docker
