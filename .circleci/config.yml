@@ -459,9 +459,9 @@ workflows:
           filters:
             tags:
               ignore: /.*/
-            branches:
-              ignore:
-                - /.*/
+            # branches:
+            #   ignore:
+            #     - /.*/
 
       - build-local:
           context: org-global
