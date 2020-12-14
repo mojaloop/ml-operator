@@ -90,7 +90,7 @@ jobs:
   check-pr-title:
     executor: default-docker
     steps:
-      - run: pr-tools/pr-title-check
+      - pr-tools/pr-title-check
       # - run:
       #     name: Install general dependencies
       #     command: *defaults_Dependencies
@@ -473,8 +473,8 @@ workflows:
 
       - check-pr-title:
           context: org-global
-          requires:
-            - setup
+          # requires:
+            # - setup
           # only build PRs?
           filters:
             tags:
