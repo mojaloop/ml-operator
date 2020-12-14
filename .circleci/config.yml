@@ -90,19 +90,20 @@ jobs:
   check-pr-title:
     executor: default-docker
     steps:
-      - run:
-          name: Install general dependencies
-          command: *defaults_Dependencies
-      - checkout
-      - restore_cache:
-          keys:
-            - dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: Check the PR title
-          command: |
-            echo "${CIRCLE_PULL_REQUESTS}"
-            echo "${CIRCLE_PULL_REQUEST}"
-            ./scripts/_pr_title.js
+      - run: pr-tools/pr-title-check
+      # - run:
+      #     name: Install general dependencies
+      #     command: *defaults_Dependencies
+      # - checkout
+      # - restore_cache:
+      #     keys:
+      #       - dependency-cache-{{ checksum "package-lock.json" }}
+      # - run:
+      #     name: Check the PR title
+      #     command: |
+      #       echo "${CIRCLE_PULL_REQUESTS}"
+      #       echo "${CIRCLE_PULL_REQUEST}"
+      #       ./scripts/_pr_title.js
 
   test-unit:
     executor: default-docker
@@ -466,6 +467,9 @@ workflows:
           filters:
             tags:
               only: /.*/
+
+      # - pr-tools/pr-title-check:
+      #     context: org-global
 
       - check-pr-title:
           context: org-global
