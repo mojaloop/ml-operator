@@ -1,4 +1,11 @@
 # Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)
+### [0.1.5](https://github.com/mojaloop/ml-operator/compare/v0.1.4...v0.1.5) (2020-12-15)
+
+
+### Features
+
+* **ci/cd:** move from local to orb based pr title check ([#8](https://github.com/mojaloop/ml-operator/issues/8)) ([db62c69](https://github.com/mojaloop/ml-operator/commit/db62c69f3ed726a9905593c04ebf977b02eedc30))
+
 ### [0.1.4](https://github.com/mojaloop/ml-operator/compare/v0.1.3...v0.1.4) (2020-12-11)
 
 
