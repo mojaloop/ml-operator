@@ -88,26 +88,6 @@ jobs:
           paths:
             - node_modules
 
-  # check-pr-title:
-  #   executor: default-docker
-  #   steps:
-  #     - pr-tools/pr-title-check:
-  #         ci-config-branch: feat/pr-title-orb
-
-      # - run:
-      #     name: Install general dependencies
-      #     command: *defaults_Dependencies
-      # - checkout
-      # - restore_cache:
-      #     keys:
-      #       - dependency-cache-{{ checksum "package-lock.json" }}
-      # - run:
-      #     name: Check the PR title
-      #     command: |
-      #       echo "${CIRCLE_PULL_REQUESTS}"
-      #       echo "${CIRCLE_PULL_REQUEST}"
-      #       ./scripts/_pr_title.js
-
   test-unit:
     executor: default-docker
     steps:
@@ -474,7 +454,7 @@ workflows:
 
       - pr-tools/pr-title-check:
           context: org-global
-          ci-config-branch: feat/pr-title-orb
+          # ci-config-branch: feat/pr-title-orb
 
       # - check-pr-title:
       #     context: org-global
