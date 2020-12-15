@@ -439,7 +439,6 @@ workflows:
   version: 2.1
   build_and_test:
     jobs:
-      - hello/hello-build
       - build-local:
           context: org-global
           filters:
@@ -454,20 +453,6 @@ workflows:
 
       - pr-tools/pr-title-check:
           context: org-global
-          # ci-config-branch: feat/pr-title-orb
-
-      # - check-pr-title:
-      #     context: org-global
-      #     # requires:
-      #       # - setup
-      #     # only build PRs?
-      #     filters:
-      #       tags:
-      #         ignore: /.*/
-      #       # branches:
-      #       #   ignore:
-      #       #     - /.*/
-
 
       - test-unit:
           context: org-global
