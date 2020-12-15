@@ -44,7 +44,6 @@
     "@commitlint/format": "^11.0.0",
     "@commitlint/lint": "^11.0.0",
     "@commitlint/load": "^11.0.0",
-    "@octokit/rest": "^18.0.12",
     "@types/convict": "^5.2.1",
     "@types/cron": "^1.7.2",
     "@types/hapi": "^18.0.3",
