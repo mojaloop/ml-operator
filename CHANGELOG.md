@@ -1,4 +1,11 @@
 # Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)
+### [0.1.6](https://github.com/mojaloop/ml-operator/compare/v0.1.5...v0.1.6) (2021-02-08)
+
+
+### Features
+
+* improve error message for debugging on cluster ([#9](https://github.com/mojaloop/ml-operator/issues/9)) ([2ee1f03](https://github.com/mojaloop/ml-operator/commit/2ee1f033c41b1db57585e6a01b9246c0c9eb7522))
+
 ### [0.1.5](https://github.com/mojaloop/ml-operator/compare/v0.1.4...v0.1.5) (2020-12-15)
 
 
