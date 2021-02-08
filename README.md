@@ -20,10 +20,38 @@ This way, for a given image with specific functionality, images containing patch
 To make it easier for Hub Operators to (upgrade and) use these patched images for obvious security, the versioning team proposes using a ‘Kubernetes Operator’ (a native k8s capability) to prompt Hub Operators (or maintainers) of latest patched images available for specific service versions and then upgrading them if so chosen by the Hub Operator (This second part of updating images, will be a roadmap item).
 
 
-## Packages
 
-- [`operator`](./operator) the Mojaloop Operator
-- [`image-watcher`](./image-watcher) a standalone service for watching Docker Hub for any given images, caching those results, and calculating new image versions based on a current version + versioning strategy
+## Running Locally
+
+
+```bash
+export SLACK_WEBHOOK_URL=<your slack webhook URL>
+
+# run the image watcher service
+cd ../image-watcher # or wherever your image watcher is cloned
+docker-compose up
+
+# now run the notifier service
+npm run dev
+```
+
+## Deploying to a cluster with `helm` and `kubectl`
+
+TODO: change to refer to helm repo
+
+Helm charts are located in `./charts`
+
+```bash
+cp ./charts/.env.example ./charts/.env
+
+# fill in the .env file with the appropriate values
+
+# install the charts - if running the first time, it will create the secrets based on the .env file
+make install
+
+kubectl get po
+```
+
 
 ## Roadmap
 
@@ -56,17 +84,3 @@ kubectl patch deployment account-lookup-service --patch '{"spec": {"template": {
 
 
 
-## Installing Charts from this repo:
-
-Helm charts are located in `./charts`
-
-```bash
-cp ./charts/.env.example ./charts/.env
-
-# fill in the .env file with the appropriate values
-
-# install the charts - if running the first time, it will create the secrets based on the .env file
-make install
-
-kubectl get po
-```
