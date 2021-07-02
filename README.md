@@ -1,6 +1,5 @@
 # ml-operator
 A Kubernetes operator for Mojaloop
-
 ## Scope:
 
 To begin with, the Mojaloop-Operator handles only one feature: Alert Switch/Hub Operators about available security patches.
