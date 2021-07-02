@@ -5,9 +5,80 @@
       "madeAt": 1612756717334
     },
     "1500|@mojaloop/central-services-health>@mojaloop/central-services-shared>widdershins>yargs>yargs-parser": {
-      "decision": "ignore",
-      "madeAt": 1612756755723,
-      "expiresAt": 1615348750443
+      "decision": "fix",
+      "madeAt": 1625201771692
+    },
+    "1673|@mojaloop/central-services-health>@mojaloop/central-services-error-handling>lodash": {
+      "decision": "fix",
+      "madeAt": 1625201771692
+    },
+    "1673|@mojaloop/central-services-health>@mojaloop/central-services-shared>@mojaloop/central-services-error-handling>lodash": {
+      "decision": "fix",
+      "madeAt": 1625201771692
+    },
+    "1673|@mojaloop/central-services-health>@mojaloop/central-services-shared>lodash": {
+      "decision": "fix",
+      "madeAt": 1625201771692
+    },
+    "1673|@mojaloop/central-services-health>@mojaloop/central-services-shared>@mojaloop/event-sdk>lodash": {
+      "decision": "fix",
+      "madeAt": 1625201771692
+    },
+    "1675|@mojaloop/central-services-health>@mojaloop/central-services-shared>shins>sanitize-html": {
+      "decision": "fix",
+      "madeAt": 1625201771692
+    },
+    "1676|@mojaloop/central-services-health>@mojaloop/central-services-shared>shins>sanitize-html": {
+      "decision": "fix",
+      "madeAt": 1625201771692
+    },
+    "1673|@mojaloop/central-services-error-handling>lodash": {
+      "decision": "fix",
+      "madeAt": 1625201791307
+    },
+    "1640|@mojaloop/central-services-health>@mojaloop/central-services-shared>widdershins>urijs": {
+      "decision": "fix",
+      "madeAt": 1625201795249
+    },
+    "1654|@mojaloop/central-services-health>@mojaloop/central-services-shared>widdershins>swagger2openapi>yargs>y18n": {
+      "decision": "fix",
+      "madeAt": 1625201806170
+    },
+    "1654|@mojaloop/central-services-health>@mojaloop/central-services-shared>widdershins>yargs>y18n": {
+      "decision": "fix",
+      "madeAt": 1625201806170
+    },
+    "1661|@kubernetes/client-node>openid-client>jose": {
+      "decision": "fix",
+      "madeAt": 1625201820062
+    },
+    "1673|@mojaloop/central-services-health>@mojaloop/central-services-shared>openapi-backend>lodash": {
+      "decision": "fix",
+      "madeAt": 1625201836611
+    },
+    "1673|@mojaloop/central-services-health>@mojaloop/central-services-shared>openapi-backend>mock-json-schema>lodash": {
+      "decision": "fix",
+      "madeAt": 1625201836611
+    },
+    "1673|@mojaloop/central-services-health>@mojaloop/central-services-shared>shins>sanitize-html>lodash": {
+      "decision": "fix",
+      "madeAt": 1625201836611
+    },
+    "1674|@kubernetes/client-node>underscore": {
+      "decision": "fix",
+      "madeAt": 1625201849193
+    },
+    "1693|@mojaloop/central-services-health>@mojaloop/central-services-shared>shins>sanitize-html>postcss": {
+      "decision": "fix",
+      "madeAt": 1625201852379
+    },
+    "1748|@kubernetes/client-node>ws": {
+      "decision": "fix",
+      "madeAt": 1625201881813
+    },
+    "1751|@mojaloop/central-services-health>@mojaloop/central-services-shared>shins>chokidar>glob-parent": {
+      "decision": "fix",
+      "madeAt": 1625201891102
     }
   },
   "rules": {},

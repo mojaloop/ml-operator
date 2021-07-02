@@ -29,8 +29,8 @@
   "dependencies": {
     "@koa/router": "^9.3.1",
     "@kubernetes/client-node": "^0.12.0",
-    "@mojaloop/central-services-error-handling": "^10.6.0",
-    "@mojaloop/central-services-health": "^11.0.0",
+    "@mojaloop/central-services-error-handling": "^11.3.0",
+    "@mojaloop/central-services-health": "^13.0.0",
     "@mojaloop/central-services-logger": "^10.6.0",
     "convict": "^6.0.0",
     "cron": "^1.8.2",
@@ -76,11 +76,11 @@
     "npm-check-updates": "7.1.1",
     "redis-mock": "^0.51.0",
     "source-map-support": "0.5.19",
-    "standard-version": "^9.0.0",
+    "standard-version": "^9.3.0",
     "swagger-cli": "^4.0.4",
     "ts-jest": "^26.2.0",
     "ts-node": "^8.10.2",
-    "ts-node-dev": "^1.0.0-pre.60",
+    "ts-node-dev": "^1.1.8",
     "tsconfig-paths": "^3.9.0",
     "typescript": "4.0.2"
   }
