@@ -62,8 +62,9 @@ kubectl get po
 
 ### `v1.0`
 
-- [ ] Slack notification about an patched image version available
-- [ ] Standalone service for watching Docker Hub for new tags for a given set of images
+- [x] Slack notification about an patched image version available
+- [x] Standalone service for watching Docker Hub for new tags for a given set of images
+- [ ] available on mojaloop/helm
 
 
 ### `v1.1`
