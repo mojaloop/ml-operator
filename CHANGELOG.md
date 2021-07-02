@@ -1,4 +1,28 @@
 # Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)
+## [0.3.0](https://github.com/mojaloop/ml-operator/compare/v0.1.6...v0.3.0) (2021-07-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* **releases:** version bump to v1.0.0
+* version bump to v1.0.0
+* **docs:** add helm notice, bump to v1.0.0 (#10)
+
+### Features
+
+* **docs:** add helm notice, bump to v1.0.0 ([#10](https://github.com/mojaloop/ml-operator/issues/10)) ([b887e6c](https://github.com/mojaloop/ml-operator/commit/b887e6c42b8a37948f4e225928348c67168943fb))
+
+
+### Bug Fixes
+
+* **releases:** version bump to v1.0.0 ([98ad753](https://github.com/mojaloop/ml-operator/commit/98ad753db9d49f860fc42a7e014be42d23348456))
+* version bump to v1.0.0 ([6abadc7](https://github.com/mojaloop/ml-operator/commit/6abadc7d93f48a3ba5f4eda6ea1913952641bd74))
+
+
+### Maintenance
+
+* **docs:** add charts moved readme note ([87a1cd3](https://github.com/mojaloop/ml-operator/commit/87a1cd3405ab0dfdfdfec05368d34a5b2dd94394))
+
 ### [0.1.6](https://github.com/mojaloop/ml-operator/compare/v0.1.5...v0.1.6) (2021-02-08)
 
 
