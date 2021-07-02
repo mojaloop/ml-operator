@@ -41,6 +41,11 @@ TODO: change to refer to helm repo
 
 Helm charts are located in `./charts`
 
+> Note: Helm charts are moving upstream to mojaloop/helm
+> and won't be mainainted here any longer.
+> refer [here](https://github.com/mojaloop/helm) instead.
+
+
 ```bash
 cp ./charts/.env.example ./charts/.env
 
