@@ -64,7 +64,7 @@ kubectl get po
 
 - [x] Slack notification about an patched image version available
 - [x] Standalone service for watching Docker Hub for new tags for a given set of images
-- [ ] available on mojaloop/helm
+- [x] available on mojaloop/helm - https://github.com/mojaloop/helm/pull/417
 
 
 ### `v1.1`
