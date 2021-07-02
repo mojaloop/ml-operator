@@ -41,6 +41,11 @@ TODO: change to refer to helm repo
 
 Helm charts are located in `./charts`
 
+> Note: Helm charts are moving upstream to mojaloop/helm
+> and won't be mainainted here any longer.
+> refer [here](https://github.com/mojaloop/helm) instead.
+
+
 ```bash
 cp ./charts/.env.example ./charts/.env
 
@@ -57,8 +62,9 @@ kubectl get po
 
 ### `v1.0`
 
-- [ ] Slack notification about an patched image version available
-- [ ] Standalone service for watching Docker Hub for new tags for a given set of images
+- [x] Slack notification about an patched image version available
+- [x] Standalone service for watching Docker Hub for new tags for a given set of images
+- [x] available on mojaloop/helm - https://github.com/mojaloop/helm/pull/417
 
 
 ### `v1.1`
