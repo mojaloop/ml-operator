@@ -286,10 +286,10 @@ jobs:
       - run:
         # TODO: depending on if next or not, run as prerelease
           name: Generate changelog and bump package version
-          command: npm run release
-      - run:
-          name: Push the release
-          command: git push --follow-tags origin ${CIRCLE_BRANCH}
+          command: npm run release-new
+      # - run:
+      #     name: Push the release
+      #     command: git push --follow-tags origin ${CIRCLE_BRANCH}
 
   github-release:
     executor: default-machine
