@@ -7,7 +7,6 @@ import config from './shared/config'
 import { ImageWatcherClient } from './shared/imageWatcherClient';
 import { SlackNotifyClient } from './shared/notifyClient';
 
-
 async function main() {
   const kc = new KubeConfig();
   if (config.SHOULD_USE_DEFAULT_K8S) {
