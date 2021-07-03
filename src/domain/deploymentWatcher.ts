@@ -28,24 +28,33 @@ export default class DeploymentWatcher {
     return this._getDesiredVersionForImageSpecs(currentImageSpecs)
   }
 
+  public async upgradeToDesiredVersion(newImage: ImageSpec) {
+    const patchMessage = this.getPatchKubectlCommand(newImage);
+    Logger.info(`upgradeToDesiredVersion - applying patch: ${patchMessage}`)
+    // const deploymentList = await this._getDeployentListOrThrowError();
+    // deploymentList.forEach(deployment => {
+    //   const metadata = deployment.metadata;
+    //   if (!metadata || !metadata.name || !metadata.namespace) {
+    //     throw new Error(`upgradeToDesiredVersion - failed to get metadata for deployment: ${JSON.stringify(deployment, null, 2)}`)
+    //   }
+
+    //   // Patch should look something like:
+    //   /// 
+
+    //   this.k8sClient.patchNamespacedDeployment(metadata.name, metadata.namespace, body)
+    // })
+  }
+
   /**
-   * @function getPatchMessageMetadata
+   * @function getPatchKubectlCommand
    * @description For a given image, print out a patch JSON string to update the deployment to that image
    * @param newImage: { ImageSpec } - the new image to patch the deployment to
    * @returns Array<string> - A list of shell commands to run in order to patch deployment
    */
-  public async getPatchMessageMetadata(newImage: ImageSpec): Promise<Array<string>> {
+  public async getPatchKubectlCommand(newImage: ImageSpec): Promise<Array<string>> {
     // TODO: how do we handle deployments with multiple containers? I guess we just filter out for
     // the relevant container?
-
-    // TODO Worry about simple case first, then on the bigger helm chart
-    const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(false, undefined, undefined, `app.kubernetes.io/name == ${this.serviceToWatch}`)
-    const deploymentList = deploymentsResult.body.items
-
-    if (deploymentList.length === 0) {
-      console.log('getPatchMessageMetadata failing with no deployment. serviceToWatch is', this.serviceToWatch)
-      throw new Error(`getPatchMessageMetadata could not find deployment for label: 'app.kubernetes.io/name == ${ this.serviceToWatch }'`)
-    }
+    const deploymentList = await this._getDeployentListOrThrowError();
 
     const templates: Array<string> = deploymentList.map(deployment => {
       const deploymentName = deployment.metadata?.name
@@ -57,7 +66,7 @@ export default class DeploymentWatcher {
         if (newImage.imageName === currentSpec.imageName && newImage.orgId === currentSpec.orgId) {
           // Throw an error - clearly something is wrong if we are trying to not upgrade
           if (newImage.tag === currentSpec.tag) {
-            throw new Error('getPatchMessageMetadata, tried to generate a new patch message, but new image is not an upgrade')
+            throw new Error('getPatchKubectlCommand, tried to generate a new patch message, but new image is not an upgrade')
           }
           return true
         }
@@ -113,6 +122,21 @@ export default class DeploymentWatcher {
     }
 
     return upgradeResult;
+  }
+
+
+  async _getDeployentListOrThrowError(): Promise<Array<k8s.V1Deployment>> {
+    // TODO Worry about simple case first, then on the bigger helm chart
+    const selector = `app.kubernetes.io/name == ${this.serviceToWatch}`
+    const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(false, undefined, undefined, selector)
+    const deploymentList = deploymentsResult.body.items
+
+    if (deploymentList.length === 0) {
+      Logger.warn('_getDeployentListOrThrowError failing with no deployment. serviceToWatch is', this.serviceToWatch)
+      throw new Error(`_getDeployentListOrThrowError could not find deployment for selector: ${selector}`)
+    }
+
+    return deploymentList
   }
 
 

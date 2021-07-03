@@ -56,13 +56,14 @@ export class ClusterWatcher {
             //push nulls so that our 2 arrays line up
             commands.push(null)
           } else {
-            const command = await w.getPatchMessageMetadata(result)
+            const command = await w.getPatchKubectlCommand(result)
             commands.push(command.join('\n'))
           }
         }
 
         if (config.EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS) {
           // Upgrade the deployments
+
 
         }
 

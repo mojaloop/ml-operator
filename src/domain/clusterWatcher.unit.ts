@@ -56,7 +56,7 @@ describe('ClusterWatcher', () => {
       }
       jest.spyOn(DeploymentWatcher.prototype, 'getDesiredVersionOrNull').mockResolvedValueOnce(null)
       jest.spyOn(DeploymentWatcher.prototype, 'getDesiredVersionOrNull').mockResolvedValueOnce(updatedImageSpec)
-      jest.spyOn(DeploymentWatcher.prototype, 'getPatchMessageMetadata').mockResolvedValueOnce(['some instructions'])
+      jest.spyOn(DeploymentWatcher.prototype, 'getPatchKubectlCommand').mockResolvedValueOnce(['some instructions'])
 
       // Act
       await clusterWatcher.getLatestAndNotify()
