@@ -1,4 +1,16 @@
 # Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)
+## [1.1.0-alpha.0](https://github.com/mojaloop/ml-operator/compare/v1.0.0...v1.1.0-alpha.0) (2021-07-03)
+
+
+### Features
+
+* **ci:** add a new release script that handles pre-releases ([170fff3](https://github.com/mojaloop/ml-operator/commit/170fff36248de518e51b264c4c325b07804132ed))
+
+
+### Maintenance
+
+* trivial bump to get v1.0.1 ([027d169](https://github.com/mojaloop/ml-operator/commit/027d169777ee7ccddb65b57966093de362a2e717))
+
 ## [1.0.0](https://github.com/mojaloop/ml-operator/compare/v0.4.0...v1.0.0) (2021-07-03)
 
 
