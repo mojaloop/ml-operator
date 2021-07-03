@@ -65,10 +65,10 @@ export class ClusterWatcher {
           if (config.EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS) {
             // Upgrade the deployments
             const upgradeResult = await w.upgradeToDesiredVersion(result)
-            // it only returns an array if something failed
-            if (Array.isArray(upgradeResult)) {
-              upgradeResult.forEach(f => failures.push(f))
-            }
+
+            // extract the results from the auto-upgrader
+            upgradeResult.successes.forEach(s => results.push(s.imageSpec))
+            upgradeResult.failures.forEach(f => failures.push(f))
           }
         }
       } catch (err) {

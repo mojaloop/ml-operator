@@ -6,7 +6,10 @@ import { ImageWatcherClient } from '../shared/imageWatcherClient'
 import { imageSpecToString, imageStringToSpec } from '~/shared/util';
 import Logger from '@mojaloop/central-services-logger';
 
-
+interface UpgradeResult {
+  successes: Array<PatchSpecWithMetadata>,
+  failures: Array<Error>
+}
 
 /**
  * @class DeploymentWatcher
@@ -30,7 +33,8 @@ export default class DeploymentWatcher {
     return this._getDesiredVersionForImageSpecs(currentImageSpecs)
   }
 
-  public async upgradeToDesiredVersion(newImage: ImageSpec): Promise<void | Array<Error>> {
+  public async upgradeToDesiredVersion(newImage: ImageSpec): Promise<UpgradeResult> {
+    const successes: Array<PatchSpecWithMetadata> = []
     const failures: Array<Error> = []
     const patchSpecsWithMetadata = await this._getPatchSpecsWithMetadata(newImage);
     const options = {
@@ -48,6 +52,7 @@ export default class DeploymentWatcher {
           JSON.parse(p.patchSpec),
           undefined, undefined, undefined, undefined, options
         );
+        successes.push(p)
       } catch (err) {
         Logger.error(`DeploymentWatcher.upgradeToDesiredVersion - failed for service: ${this.serviceToWatch}'`)
         Logger.verbose(util.inspect(err))
@@ -55,8 +60,12 @@ export default class DeploymentWatcher {
       }
     }))
 
-    if (failures.length > 0) {
-      return failures
+    // if (failures.length > 0) {
+    //   return failures
+    // }
+    return {
+      successes,
+      failures
     }
   }
 
@@ -86,6 +95,10 @@ export default class DeploymentWatcher {
         .filter(i => i !== undefined) as string[]
 
       const imageSpecs = images.map(i => imageStringToSpec(i))
+
+      if (imageSpecs.length === 0) {
+        Logger.debug(`DeploymentWatcher._getCurrentImageSpecsForDeployment - no deployment found for label: 'app.kubernetes.io/name == ${this.serviceToWatch}'`)
+      }
 
       return imageSpecs
     } catch (err) {
@@ -178,7 +191,8 @@ export default class DeploymentWatcher {
         metadata: {
           name: deploymentName,
           namespace: namespace
-        }
+        },
+        imageSpec: newImage
       }
       return patchSpecWithMetadata
     })

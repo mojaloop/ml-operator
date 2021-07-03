@@ -22,5 +22,8 @@ export interface PatchSpecWithMetadata {
   metadata: {
     name: string,
     namespace: string,
-  }
+  },
+
+  // The desired image spec in a structured format
+  imageSpec: ImageSpec
 }
