@@ -19,7 +19,6 @@ This way, for a given image with specific functionality, images containing patch
 To make it easier for Hub Operators to (upgrade and) use these patched images for obvious security, the versioning team proposes using a ‘Kubernetes Operator’ (a native k8s capability) to prompt Hub Operators (or maintainers) of latest patched images available for specific service versions and then upgrading them if so chosen by the Hub Operator (This second part of updating images, will be a roadmap item).
 
 
-
 ## Running Locally
 
 
