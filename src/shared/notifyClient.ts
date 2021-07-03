@@ -1,6 +1,8 @@
 import Logger from '@mojaloop/central-services-logger';
 import got from 'got'
 import { ImageSpec } from '../domain/types';
+import util from 'util'
+
 
 export interface NotifyClient {
   notifyOperator(services: Array<ImageSpec>, commands?: Array<string>, failures?: Array<Error>): Promise<void>
@@ -10,7 +12,8 @@ export class NoopNotifyClient implements NotifyClient {
   public async notifyOperator(_services: Array<ImageSpec>, _commands?: Array<string>, _failures?: Array<Error>): Promise<void> {
     Logger.info(`NoopNotifyClient: No notification is being sent`)
     if (_failures && _failures.length > 0) {
-      Logger.info(`- found ${ _failures?.length } failures`)
+      Logger.info(`- found ${ _failures?.length } failures:`)
+      _failures.forEach(f => Logger.info(`    - ${util.inspect(f)}`))
     }
   }
 

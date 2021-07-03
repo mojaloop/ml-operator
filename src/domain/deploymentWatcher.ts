@@ -33,16 +33,31 @@ export default class DeploymentWatcher {
   public async upgradeToDesiredVersion(newImage: ImageSpec): Promise<void | Array<Error>> {
     const failures: Array<Error> = []
     const patchSpecsWithMetadata = await this._getPatchSpecsWithMetadata(newImage);
+    const options = {
+      headers: {
+        'Content-Type': 'application/merge-patch+json'
+      }
+    }
 
     await Promise.all(patchSpecsWithMetadata.map(async p => {
       try {
-        await this.k8sClient.patchNamespacedDeployment(p.metadata.name, p.metadata.name, JSON.parse(p.patchSpec));
+        Logger.silly(`DeploymentWatcher.upgradeToDesiredVersion - ${p.metadata.name},  ${p.metadata.namespace}, ${p.patchSpec}`)
+        await this.k8sClient.patchNamespacedDeployment(
+          p.metadata.name, 
+          p.metadata.namespace, 
+          JSON.parse(p.patchSpec),
+          undefined, undefined, undefined, undefined, options
+        );
       } catch (err) {
         Logger.error(`DeploymentWatcher.upgradeToDesiredVersion - failed for service: ${this.serviceToWatch}'`)
         Logger.verbose(util.inspect(err))
         failures.push(err)
       }
     }))
+
+    if (failures.length > 0) {
+      return failures
+    }
   }
 
   /**
