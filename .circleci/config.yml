@@ -284,6 +284,7 @@ jobs:
             ssh-keyscan -p 443 ssh.github.com >> ~/.ssh/known_hosts
             ssh-keyscan github.com >> ~/.ssh/known_hosts
       - run:
+        # TODO: depending on if next or not, run as prerelease
           name: Generate changelog and bump package version
           command: npm run release
       - run:
@@ -534,8 +535,6 @@ workflows:
           requires:
             - test-unit
             - test-coverage
-            # - test-integration
-            # - test-bdd
             - audit-licenses
             # - linting-check
             - vulnerability-check
@@ -545,6 +544,7 @@ workflows:
             branches:
               only:
                 - master
+                - next
 
 
       - github-release:
@@ -555,6 +555,7 @@ workflows:
             branches:
               only:
                 - master
+                - next
 
       # New Tags are built and deployed as docker artifacts
       - publish:
