@@ -13,3 +13,14 @@ export interface ImageName {
 export interface ImageSpec extends ImageName {
   tag: string,
 }
+
+export interface PatchSpecWithMetadata {
+  // The spec to update this deployment with
+  patchSpec: string
+  
+  // deployment metadata - a subset of V1ObjectMeta
+  metadata: {
+    name: string,
+    namespace: string,
+  }
+}

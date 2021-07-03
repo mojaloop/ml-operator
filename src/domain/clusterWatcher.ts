@@ -49,24 +49,28 @@ export class ClusterWatcher {
       try {
         const result = await w.getDesiredVersionOrNull()
         results.push(result)
-
-        // make sure to grab command metadata if we need it
-        if (config.NOTIFY_KUBECTL_PATCH_INSTRUCTIONS) {
-          if (!result) {
-            //push nulls so that our 2 arrays line up
-            commands.push(null)
-          } else {
+        if (!result) {
+          Logger.warn(`Found null result for watcher: ${w.serviceToWatch}`)
+          if (config.NOTIFY_KUBECTL_PATCH_INSTRUCTIONS) {
+              //push nulls so that our 2 arrays line up
+              commands.push(null)
+          }
+        } else {
+          // make sure to grab command metadata if we need it
+          if (config.NOTIFY_KUBECTL_PATCH_INSTRUCTIONS) {
             const command = await w.getPatchKubectlCommand(result)
             commands.push(command.join('\n'))
           }
+
+          if (config.EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS) {
+            // Upgrade the deployments
+            const upgradeResult = await w.upgradeToDesiredVersion(result)
+            // it only returns an array if something failed
+            if (Array.isArray(upgradeResult)) {
+              upgradeResult.forEach(f => failures.push(f))
+            }
+          }
         }
-
-        if (config.EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS) {
-          // Upgrade the deployments
-
-
-        }
-
       } catch (err) {
         Logger.error(`first ClusterWatcher.getLatestAndNotify() - failing for: ${w.serviceToWatch}`)
         failures.push(err)

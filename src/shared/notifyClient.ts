@@ -8,9 +8,9 @@ export interface NotifyClient {
 
 export class NoopNotifyClient implements NotifyClient {
   public async notifyOperator(_services: Array<ImageSpec>, _commands?: Array<string>, _failures?: Array<Error>): Promise<void> {
-    Logger.warn(`NoopNotifyClient: No notification is being sent`)
+    Logger.info(`NoopNotifyClient: No notification is being sent`)
     if (_failures && _failures.length > 0) {
-      Logger.warn(`- found ${ _failures?.length } failures`)
+      Logger.info(`- found ${ _failures?.length } failures`)
     }
   }
 

@@ -1,10 +1,12 @@
 import k8s  from '@kubernetes/client-node'
 import util from 'util'
 
-import { ImageSpec, UpgradeStrategy } from "./types";
+import { ImageSpec, PatchSpecWithMetadata, UpgradeStrategy } from "./types";
 import { ImageWatcherClient } from '../shared/imageWatcherClient'
 import { imageSpecToString, imageStringToSpec } from '~/shared/util';
 import Logger from '@mojaloop/central-services-logger';
+
+
 
 /**
  * @class DeploymentWatcher
@@ -28,21 +30,19 @@ export default class DeploymentWatcher {
     return this._getDesiredVersionForImageSpecs(currentImageSpecs)
   }
 
-  public async upgradeToDesiredVersion(newImage: ImageSpec) {
-    const patchMessage = this.getPatchKubectlCommand(newImage);
-    Logger.info(`upgradeToDesiredVersion - applying patch: ${patchMessage}`)
-    // const deploymentList = await this._getDeployentListOrThrowError();
-    // deploymentList.forEach(deployment => {
-    //   const metadata = deployment.metadata;
-    //   if (!metadata || !metadata.name || !metadata.namespace) {
-    //     throw new Error(`upgradeToDesiredVersion - failed to get metadata for deployment: ${JSON.stringify(deployment, null, 2)}`)
-    //   }
+  public async upgradeToDesiredVersion(newImage: ImageSpec): Promise<void | Array<Error>> {
+    const failures: Array<Error> = []
+    const patchSpecsWithMetadata = await this._getPatchSpecsWithMetadata(newImage);
 
-    //   // Patch should look something like:
-    //   /// 
-
-    //   this.k8sClient.patchNamespacedDeployment(metadata.name, metadata.namespace, body)
-    // })
+    await Promise.all(patchSpecsWithMetadata.map(async p => {
+      try {
+        await this.k8sClient.patchNamespacedDeployment(p.metadata.name, p.metadata.name, JSON.parse(p.patchSpec));
+      } catch (err) {
+        Logger.error(`DeploymentWatcher.upgradeToDesiredVersion - failed for service: ${this.serviceToWatch}'`)
+        Logger.verbose(util.inspect(err))
+        failures.push(err)
+      }
+    }))
   }
 
   /**
@@ -52,36 +52,10 @@ export default class DeploymentWatcher {
    * @returns Array<string> - A list of shell commands to run in order to patch deployment
    */
   public async getPatchKubectlCommand(newImage: ImageSpec): Promise<Array<string>> {
-    // TODO: how do we handle deployments with multiple containers? I guess we just filter out for
-    // the relevant container?
-    const deploymentList = await this._getDeployentListOrThrowError();
-
-    const templates: Array<string> = deploymentList.map(deployment => {
-      const deploymentName = deployment.metadata?.name
-      // Iterate through the containers, and apply the updates to the relevant containers in the deployment
-      // 99% of the time, this will just be one container in the deployment that matches, but who knows?
-      const containersToApply = deployment.spec?.template.spec?.containers.filter(container => {
-        const currentSpec = imageStringToSpec(container.image!)
-        // skip images that are not relevant to what should be patched
-        if (newImage.imageName === currentSpec.imageName && newImage.orgId === currentSpec.orgId) {
-          // Throw an error - clearly something is wrong if we are trying to not upgrade
-          if (newImage.tag === currentSpec.tag) {
-            throw new Error('getPatchKubectlCommand, tried to generate a new patch message, but new image is not an upgrade')
-          }
-          return true
-        }
-
-        return false
-      })
-      .map(container => ({name: container.name, image: imageSpecToString(newImage)}))
-      const patchSpec = `'{"spec": {"template": {"spec": {"containers": ${JSON.stringify(containersToApply)}}}}}'`
-
-      // e.g. kubectl patch deployment account-lookup-service --patch '{"spec": {"template": {"spec": {"containers": [{"name": "account-lookup-service", "image": "mojaloop/account-lookup-service:v10.3.1"}]}}}}'
-      return `kubectl patch deployment ${deploymentName} --patch ${patchSpec}`
-    })
-
-
-    return templates
+    const patchSpecsWithMetadata = await this._getPatchSpecsWithMetadata(newImage);
+    
+    // Transform into a kubectl command
+    return patchSpecsWithMetadata.map(p => `kubectl patch deployment ${p.metadata.name} --patch ${p.patchSpec}`)
   }
 
   public async _getCurrentImageSpecsForDeployment(): Promise<Array<ImageSpec>> {
@@ -101,7 +75,7 @@ export default class DeploymentWatcher {
       return imageSpecs
     } catch (err) {
       Logger.error(`DeploymentWatcher._getCurrentImageSpecsForDeployment - failed for service: ${this.serviceToWatch}'`)
-      Logger.error(util.inspect(err))
+      Logger.verbose(util.inspect(err))
       throw err
     }
   }
@@ -139,6 +113,62 @@ export default class DeploymentWatcher {
     return deploymentList
   }
 
+  /**
+  * @function _getPatchSpecsWithMetadata
+  * @description For a given image, get a list of PatchSpecs to upgrade to the deployment
+  * @param newImage: { ImageSpec } - the new image to patch the deployment to
+  * @returns Array<PatchSpecWithMetadata> - A list of patchspecs to be applied
+  */
+  async _getPatchSpecsWithMetadata(newImage: ImageSpec): Promise<Array<PatchSpecWithMetadata>> {
+    // TODO: how do we handle deployments with multiple containers? I guess we just filter out for
+    // the relevant container?
+    const deploymentList = await this._getDeployentListOrThrowError();
 
+    const templates: Array<PatchSpecWithMetadata> = deploymentList.map(deployment => {
+      const deploymentName = deployment.metadata?.name
+      const namespace = deployment.metadata?.namespace
+      if (!deploymentName) {
+        throw new Error('_getPatchSpecsWithMetadata, could not find deployment name')
+
+      }
+      if (!namespace) {
+        throw new Error('_getPatchSpecsWithMetadata, could not find namespace')
+
+      }
+      // Iterate through the containers, and apply the updates to the relevant containers in the deployment
+      // 99% of the time, this will just be one container in the deployment that matches, but who knows?
+      const containersToApply = deployment.spec?.template.spec?.containers.filter(container => {
+        const currentSpec = imageStringToSpec(container.image!)
+        // skip images that are not relevant to what should be patched
+        if (newImage.imageName === currentSpec.imageName && newImage.orgId === currentSpec.orgId) {
+          // Throw an error - clearly something is wrong if we are trying to not upgrade
+          if (newImage.tag === currentSpec.tag) {
+            throw new Error('_getPatchSpecsWithMetadata, tried to generate a new patch message, but new image is not an upgrade')
+          }
+          return true
+        }
+
+        return false
+      })
+        .map(container => ({ name: container.name, image: imageSpecToString(newImage) }))
+      
+      // e.g. '{"spec": {"template": {"spec": {"containers": [{"name": "account-lookup-service", "image": "mojaloop/account-lookup-service:v10.3.1"}]}}}}'
+      const patchSpec = `{"spec": {"template": {"spec": {"containers": ${JSON.stringify(containersToApply)}}}}}`
+      
+      // Ensure that patchSpec is a valid JSON object
+      JSON.parse(patchSpec) 
+
+      const patchSpecWithMetadata: PatchSpecWithMetadata = {
+        patchSpec, 
+        metadata: {
+          name: deploymentName,
+          namespace: namespace
+        }
+      }
+      return patchSpecWithMetadata
+    })
+
+    return templates
+  }
 
 }
