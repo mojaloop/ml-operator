@@ -16,6 +16,7 @@ export interface ServiceConfig {
   IMAGE_WATCHER_CLIENT_URL: string,
   SHOULD_USE_DEFAULT_K8S: boolean,
   NOTIFY_KUBECTL_PATCH_INSTRUCTIONS: boolean,
+  EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS: boolean,
 }
 
 // Declare configuration schema, default values and bindings to environment variables
@@ -60,7 +61,12 @@ export const ConvictConfig = Convict<ServiceConfig>({
     doc: 'Set to `true` you want the slack notification to include `kubectl patch` instructions to copy and paste',
     default: true,
     env: 'NOTIFY_KUBECTL_PATCH_INSTRUCTIONS'
-  }
+  },
+  EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS: {
+    doc: 'Set to `true` you want ml-operator to update. WARNING - experimental feature.',
+    default: false,
+    env: 'EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS'
+  },
 })
 
 // Load environment dependent configuration
@@ -80,6 +86,7 @@ const config: ServiceConfig = {
   IMAGE_WATCHER_CLIENT_URL: ConvictConfig.get('IMAGE_WATCHER_CLIENT_URL'),
   SHOULD_USE_DEFAULT_K8S: ConvictConfig.get('SHOULD_USE_DEFAULT_K8S'),
   NOTIFY_KUBECTL_PATCH_INSTRUCTIONS: ConvictConfig.get('NOTIFY_KUBECTL_PATCH_INSTRUCTIONS'),
+  EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS: ConvictConfig.get('EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS'),
 }
 
 export default config

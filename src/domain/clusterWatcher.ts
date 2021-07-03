@@ -60,6 +60,12 @@ export class ClusterWatcher {
             commands.push(command.join('\n'))
           }
         }
+
+        if (config.EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS) {
+          // Upgrade the deployments
+
+        }
+
       } catch (err) {
         Logger.error(`first ClusterWatcher.getLatestAndNotify() - failing for: ${w.serviceToWatch}`)
         failures.push(err)

@@ -6,6 +6,15 @@ export interface NotifyClient {
   notifyOperator(services: Array<ImageSpec>, commands?: Array<string>, failures?: Array<Error>): Promise<void>
 }
 
+export class NoopNotifyClient implements NotifyClient {
+  public async notifyOperator(_services: Array<ImageSpec>, _commands?: Array<string>, _failures?: Array<Error>): Promise<void> {
+    Logger.warn(`NoopNotifyClient: No notification is being sent`)
+    if (_failures && _failures.length > 0) {
+      Logger.warn(`- found ${ _failures?.length } failures`)
+    }
+  }
+
+}
 export class SlackNotifyClient implements NotifyClient {
   private webhook: string;
 

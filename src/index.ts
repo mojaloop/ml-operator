@@ -5,7 +5,7 @@ import Logger from '@mojaloop/central-services-logger'
 import { ClusterWatcher } from './domain/clusterWatcher';
 import config from './shared/config'
 import { ImageWatcherClient } from './shared/imageWatcherClient';
-import { SlackNotifyClient } from './shared/notifyClient';
+import { NoopNotifyClient, SlackNotifyClient } from './shared/notifyClient';
 
 async function main() {
   const kc = new KubeConfig();
@@ -18,8 +18,16 @@ async function main() {
   }
   const k8sApi = kc.makeApiClient(AppsV1Api);
 
+  if (config.EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS) {
+    Logger.warn('EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS is true. This is an experimental\
+    feature, and should not be used for production environments.')
+  }
+
   const imageWatcherClient = new ImageWatcherClient(config.IMAGE_WATCHER_CLIENT_URL)
-  const slackNotifyClient = new SlackNotifyClient(config.SLACK_WEBHOOK_URL);
+  let slackNotifyClient = new NoopNotifyClient()
+  if (config.NOTIFY_KUBECTL_PATCH_INSTRUCTIONS) {
+    slackNotifyClient = new SlackNotifyClient(config.SLACK_WEBHOOK_URL);
+  }
   const servicesAndStrategies = config.SERVICES.map(service => ({service, strategy: config.UPGRADE_STRATEGY}))
 
   const clusterWatcher = new ClusterWatcher(k8sApi, imageWatcherClient, slackNotifyClient, servicesAndStrategies)
