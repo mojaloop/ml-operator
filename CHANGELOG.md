@@ -1,4 +1,6 @@
 # Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)
+## [1.1.0-alpha.98](https://github.com/mojaloop/ml-operator/compare/v1.1.0-alpha.97...v1.1.0-alpha.98) (2021-07-03)
+
 ## [1.1.0-alpha.97](https://github.com/mojaloop/ml-operator/compare/v1.1.0-alpha.96...v1.1.0-alpha.97) (2021-07-03)
 
 ## [1.1.0-alpha.96](https://github.com/mojaloop/ml-operator/compare/v1.1.0-alpha.95...v1.1.0-alpha.96) (2021-07-03)
