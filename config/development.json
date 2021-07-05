@@ -1,9 +1,8 @@
 {
   "SERVICES": [
     "account-lookup-service",
-    "auth-service",
-    "central-ledger",
-    "nginx-ingress-nginx-controller",
+    "account-lookup-service-admin",
+    "centralledger-service",
     "quoting-service",
     "transaction-requests-service"
   ],
