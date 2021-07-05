@@ -19,6 +19,7 @@ case ${CIRCLE_BRANCH} in
   next)
       ./node_modules/.bin/standard-version \
         --prerelease alpha \
+        --dry-run \
         --releaseCommitMessageFormat ${RELEASE_COMMIT_MESSAGE_FORMAT}
   ;;
 
