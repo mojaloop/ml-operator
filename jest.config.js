@@ -16,10 +16,10 @@ module.exports = {
   clearMocks: true,
   coverageThreshold: {
     global: {
-      statements: 90,
-      functions: 90,
+      statements: 84,
+      functions: 85,
       branches: 85,
-      lines: 90
+      lines: 84
     }
   },
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
