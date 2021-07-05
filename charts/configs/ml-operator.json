@@ -1,11 +1,6 @@
 {
   "SERVICES": [
-    "account-lookup-service",
-    "auth-service",
-    "central-ledger",
-    "nginx-ingress-nginx-controller",
-    "quoting-service",
-    "transaction-requests-service"
+    "dev-portal"
   ],
   "UPGRADE_STRATEGY": "BUGFIX",
   "CHECK_FOR_UPDATE_CRON": "*/10 * * * *",

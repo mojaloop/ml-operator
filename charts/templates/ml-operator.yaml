@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: ml-operator
-          image: mojaloop/ml-operator:v0.1.2
+          image: mojaloop/ml-operator:v1.1.0-alpha.438
           # command: [ "tail", "-f", "/dev/null" ]
           volumeMounts:
             - name: ml-operator-config-volume
