@@ -1,10 +1,6 @@
 {
   "SERVICES": [
-    "account-lookup-service",
-    "account-lookup-service-admin",
-    "centralledger-service",
-    "quoting-service",
-    "transaction-requests-service"
+    "dev-portal"
   ],
   "UPGRADE_STRATEGY": "BUGFIX",
   "CHECK_FOR_UPDATE_CRON": "*/10 * * * *",
