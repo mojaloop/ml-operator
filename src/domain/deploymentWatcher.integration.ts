@@ -12,7 +12,7 @@ const k8sApi = kc.makeApiClient(AppsV1Api);
 const imageWatcherClient = new ImageWatcherClient('localhost:4000')
 
 describe('deploymentWatcher', () => {
-  describe('tmp_getPatchMessageMetadata', () => {
+  describe('tmp_getPatchKubectlCommand', () => {
     it('gets the patch message metadata', async () => {
       // Arrange
       const service = 'account-lookup-service'
@@ -24,7 +24,7 @@ describe('deploymentWatcher', () => {
       const deploymentWatcher = new DeploymentWatcher(k8sApi, service, imageWatcherClient, UpgradeStrategy.BUGFIX)
 
       // Act
-      const result = await deploymentWatcher.getPatchMessageMetadata(newImage)
+      const result = await deploymentWatcher.getPatchKubectlCommand(newImage)
 
       // Assert
       console.log('result is', result)
