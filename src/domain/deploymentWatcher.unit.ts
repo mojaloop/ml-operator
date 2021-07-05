@@ -93,7 +93,7 @@ describe('deploymentWatcher', () => {
       const action = async () => dw.getPatchKubectlCommand(newImage)
 
       // Assert
-      await expect(action).rejects.toThrowError('getPatchKubectlCommand, tried to generate a new patch message')
+      await expect(action).rejects.toThrowError('_getPatchSpecsWithMetadata, tried to generate a new patch message, but new image is not an upgrade')
       expect(listDeploymentsSpy).toHaveBeenCalledTimes(1)
     })
 
@@ -113,7 +113,7 @@ describe('deploymentWatcher', () => {
       const action = async () => dw.getPatchKubectlCommand(newImage)
 
       // Assert
-      await expect(action).rejects.toThrowError('getPatchKubectlCommand could not find deployment')
+      await expect(action).rejects.toThrowError('_getDeployentListOrThrowError could not find deployment for selector: app.kubernetes.io/name == mojaloop/account-lookup-service')
       expect(listDeploymentsSpy).toHaveBeenCalledTimes(1)
     })
   })

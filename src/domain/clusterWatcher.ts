@@ -41,6 +41,8 @@ export class ClusterWatcher {
   public async getLatestAndNotify(): Promise<void> {
     Logger.info(`ClusterWatcher.getLatestAndNotify() - checking ${this.servicesAndStrategies.length} deployments for outdated images`)
 
+    console.log("config is", config)
+
     const results: Array<ImageSpec | null> = []
     const commands: Array<string | null> = []
     const failures: Array<Error> = []

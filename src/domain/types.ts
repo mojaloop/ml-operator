@@ -27,3 +27,8 @@ export interface PatchSpecWithMetadata {
   // The desired image spec in a structured format
   imageSpec: ImageSpec
 }
+
+export interface UpgradeResult {
+  successes: Array<PatchSpecWithMetadata>,
+  failures: Array<Error>
+}

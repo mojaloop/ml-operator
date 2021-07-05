@@ -1,15 +1,10 @@
 import k8s  from '@kubernetes/client-node'
 import util from 'util'
 
-import { ImageSpec, PatchSpecWithMetadata, UpgradeStrategy } from "./types";
+import { ImageSpec, PatchSpecWithMetadata, UpgradeResult, UpgradeStrategy } from "./types";
 import { ImageWatcherClient } from '../shared/imageWatcherClient'
 import { imageSpecToString, imageStringToSpec } from '~/shared/util';
 import Logger from '@mojaloop/central-services-logger';
-
-interface UpgradeResult {
-  successes: Array<PatchSpecWithMetadata>,
-  failures: Array<Error>
-}
 
 /**
  * @class DeploymentWatcher
@@ -76,7 +71,7 @@ export default class DeploymentWatcher {
     const patchSpecsWithMetadata = await this._getPatchSpecsWithMetadata(newImage);
     
     // Transform into a kubectl command
-    return patchSpecsWithMetadata.map(p => `kubectl patch deployment ${p.metadata.name} --patch ${p.patchSpec}`)
+    return patchSpecsWithMetadata.map(p => `kubectl patch deployment ${p.metadata.name} --patch '${p.patchSpec}'`)
   }
 
   public async _getCurrentImageSpecsForDeployment(): Promise<Array<ImageSpec>> {
