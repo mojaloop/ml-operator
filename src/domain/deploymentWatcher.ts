@@ -60,9 +60,6 @@ export default class DeploymentWatcher {
       }
     }))
 
-    // if (failures.length > 0) {
-    //   return failures
-    // }
     return {
       successes,
       failures
@@ -129,6 +126,7 @@ export default class DeploymentWatcher {
 
   async _getDeployentListOrThrowError(): Promise<Array<k8s.V1Deployment>> {
     // TODO Worry about simple case first, then on the bigger helm chart
+    // we may want to search for more than one selectors in the future
     const selector = `app.kubernetes.io/name == ${this.serviceToWatch}`
     const deploymentsResult = await this.k8sClient.listDeploymentForAllNamespaces(false, undefined, undefined, selector)
     const deploymentList = deploymentsResult.body.items
