@@ -1,4 +1,11 @@
 # Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)
+## [1.1.0-alpha.436](https://github.com/mojaloop/ml-operator/compare/v1.1.0-alpha.435...v1.1.0-alpha.436) (2021-07-05)
+
+
+### Features
+
+* add temp dry-run to try and debug infinite loop ([2f90f08](https://github.com/mojaloop/ml-operator/commit/2f90f081f8dfabf459577028972e5c93e6d5e0ea))
+
 ## [1.1.0-alpha.435](https://github.com/mojaloop/ml-operator/compare/v1.1.0-alpha.434...v1.1.0-alpha.435) (2021-07-03)
 
 ## [1.1.0-alpha.434](https://github.com/mojaloop/ml-operator/compare/v1.1.0-alpha.433...v1.1.0-alpha.434) (2021-07-03)
