@@ -5,7 +5,9 @@
 set -e
 set -u
 
-RELEASE_COMMIT_MESSAGE_FORMAT="chore(release): {{currentTag}} [skip ci]"
+RELEASE_COMMIT_MESSAGE_FORMAT='chore(release): {{currentTag}} [skip ci]'
+
+echo "RELEASE_COMMIT_MESSAGE_FORMAT is: ${RELEASE_COMMIT_MESSAGE_FORMAT}"
 
 
 case ${CIRCLE_BRANCH} in
@@ -19,8 +21,7 @@ case ${CIRCLE_BRANCH} in
   next)
       ./node_modules/.bin/standard-version \
         --prerelease alpha \
-        --dry-run \
-        --releaseCommitMessageFormat ${RELEASE_COMMIT_MESSAGE_FORMAT}
+        --releaseCommitMessageFormat "${RELEASE_COMMIT_MESSAGE_FORMAT}"
   ;;
 
   *)
