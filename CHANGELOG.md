@@ -1,4 +1,11 @@
 # Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)
+## [1.1.0-alpha.439](https://github.com/mojaloop/ml-operator/compare/v1.1.0-alpha.438...v1.1.0-alpha.439) (2021-07-06)
+
+
+### Bug Fixes
+
+* **ci:** infinite loop when deploying to master ([f481190](https://github.com/mojaloop/ml-operator/commit/f481190645c4ec98ba4b11047733fa9620c5530c))
+
 ## [1.1.0-alpha.438](https://github.com/mojaloop/ml-operator/compare/v1.1.0-alpha.437...v1.1.0-alpha.438) (2021-07-05)
 
 
