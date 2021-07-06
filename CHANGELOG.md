@@ -1,4 +1,18 @@
 # Changelog: [mojaloop/ml-operator/image-watcher](https://github.com/mojaloop/ml-operator)
+## [1.1.0-alpha.438](https://github.com/mojaloop/ml-operator/compare/v1.1.0-alpha.437...v1.1.0-alpha.438) (2021-07-05)
+
+
+### Features
+
+* implement experimental auto upgrades to images ([#11](https://github.com/mojaloop/ml-operator/issues/11)) ([fa29e34](https://github.com/mojaloop/ml-operator/commit/fa29e341834077a5a70d0962862b816f279c15dc))
+
+## [1.1.0-alpha.437](https://github.com/mojaloop/ml-operator/compare/v1.1.0-alpha.436...v1.1.0-alpha.437) (2021-07-05)
+
+
+### Bug Fixes
+
+* **releases:** fixed infinite loop - Sorry for the spam [@millerabel](https://github.com/millerabel) ([e7505d9](https://github.com/mojaloop/ml-operator/commit/e7505d99998eaff4b577da8c70a9fc1b179a996c))
+
 ## [1.1.0-alpha.436](https://github.com/mojaloop/ml-operator/compare/v1.1.0-alpha.435...v1.1.0-alpha.436) (2021-07-05)
 
 

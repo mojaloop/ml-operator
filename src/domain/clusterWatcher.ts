@@ -41,6 +41,8 @@ export class ClusterWatcher {
   public async getLatestAndNotify(): Promise<void> {
     Logger.info(`ClusterWatcher.getLatestAndNotify() - checking ${this.servicesAndStrategies.length} deployments for outdated images`)
 
+    console.log("config is", config)
+
     const results: Array<ImageSpec | null> = []
     const commands: Array<string | null> = []
     const failures: Array<Error> = []
@@ -49,15 +51,26 @@ export class ClusterWatcher {
       try {
         const result = await w.getDesiredVersionOrNull()
         results.push(result)
-
-        // make sure to grab command metadata if we need it
-        if (config.NOTIFY_KUBECTL_PATCH_INSTRUCTIONS) {
-          if (!result) {
-            //push nulls so that our 2 arrays line up
-            commands.push(null)
-          } else {
-            const command = await w.getPatchMessageMetadata(result)
+        if (!result) {
+          Logger.warn(`Found null result for watcher: ${w.serviceToWatch}`)
+          if (config.NOTIFY_KUBECTL_PATCH_INSTRUCTIONS) {
+              //push nulls so that our 2 arrays line up
+              commands.push(null)
+          }
+        } else {
+          // make sure to grab command metadata if we need it
+          if (config.NOTIFY_KUBECTL_PATCH_INSTRUCTIONS) {
+            const command = await w.getPatchKubectlCommand(result)
             commands.push(command.join('\n'))
+          }
+
+          if (config.EXPERIMENTAL_AUTO_UPGRADE_DEPLOYMENTS) {
+            // Upgrade the deployments
+            const upgradeResult = await w.upgradeToDesiredVersion(result)
+
+            // extract the results from the auto-upgrader
+            upgradeResult.successes.forEach(s => results.push(s.imageSpec))
+            upgradeResult.failures.forEach(f => failures.push(f))
           }
         }
       } catch (err) {

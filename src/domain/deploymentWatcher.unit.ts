@@ -31,7 +31,7 @@ describe('deploymentWatcher', () => {
     })
   })
 
-  describe('getPatchMessageMetadata', () => {
+  describe('getPatchKubectlCommand', () => {
     it('gets the patch message(s) for the deployment', async () => {
       // Arrange
       const dw = new DeploymentWatcher(new AppsV1Api(), 'mojaloop/account-lookup-service', mockImageWatcher, UpgradeStrategy.BUGFIX)
@@ -46,7 +46,7 @@ describe('deploymentWatcher', () => {
       ]
 
       // Act
-      const result = await dw.getPatchMessageMetadata(newImage)
+      const result = await dw.getPatchKubectlCommand(newImage)
 
       // Assert
       expect(listDeploymentsSpy).toHaveBeenCalledTimes(1)
@@ -72,7 +72,7 @@ describe('deploymentWatcher', () => {
       ]
 
       // Act
-      const result = await dw.getPatchMessageMetadata(newImage)
+      const result = await dw.getPatchKubectlCommand(newImage)
 
       // Assert
       expect(listDeploymentsSpy).toHaveBeenCalledTimes(1)
@@ -90,10 +90,10 @@ describe('deploymentWatcher', () => {
       }
 
       // Act
-      const action = async () => dw.getPatchMessageMetadata(newImage)
+      const action = async () => dw.getPatchKubectlCommand(newImage)
 
       // Assert
-      await expect(action).rejects.toThrowError('getPatchMessageMetadata, tried to generate a new patch message')
+      await expect(action).rejects.toThrowError('_getPatchSpecsWithMetadata, tried to generate a new patch message, but new image is not an upgrade')
       expect(listDeploymentsSpy).toHaveBeenCalledTimes(1)
     })
 
@@ -110,10 +110,10 @@ describe('deploymentWatcher', () => {
       }
 
       // Act
-      const action = async () => dw.getPatchMessageMetadata(newImage)
+      const action = async () => dw.getPatchKubectlCommand(newImage)
 
       // Assert
-      await expect(action).rejects.toThrowError('getPatchMessageMetadata could not find deployment')
+      await expect(action).rejects.toThrowError('_getDeployentListOrThrowError could not find deployment for selector: app.kubernetes.io/name == mojaloop/account-lookup-service')
       expect(listDeploymentsSpy).toHaveBeenCalledTimes(1)
     })
   })
